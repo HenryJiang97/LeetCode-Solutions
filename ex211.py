@@ -20,7 +20,7 @@ class WordDictionary:
         
         # Add word to the set for its specific length
         self.w[len(word)].add(word)
-        
+
         
 
     def search(self, word):
