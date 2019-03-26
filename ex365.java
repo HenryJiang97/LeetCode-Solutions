@@ -9,9 +9,7 @@ class Solution {
     
     // Get the greatest common divisor
     public int GCP(int x, int y) {
-        for (int i = Math.min(x, y); i >= 1; i--) {
-            if (x % i == 0 && y % i == 0)    return i;
-        }     
-        return 0;
+        if (x == 0)    return y;
+        return GCP(y % x, x);
     }
 }
