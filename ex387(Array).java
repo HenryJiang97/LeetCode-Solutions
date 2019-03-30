@@ -1,5 +1,3 @@
-import java.util.*;
-
 class Solution {
     public int firstUniqChar(String s) {
         int[] alphabet = new int[26];
