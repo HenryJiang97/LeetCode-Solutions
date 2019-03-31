@@ -1,20 +1,21 @@
 class Solution {
-    public int numPairsDivisibleBy60(int[] time) {
-        int res = 0;
-        int[] mod = new int[60];
+    public boolean canThreePartsEqualSum(int[] A) {
+        // Get the sum of the array
+        int sum = 0;
+        for (int a : A)    sum += a;
         
-        // Build mod array to store the appearence of each mod value
-        for (int i = 0; i < time.length; i++) {
-            time[i] = time[i] % 60;
-            mod[time[i]]++;
+        // Get the sum of each partition
+        if (sum % 3 != 0)    return false;
+        int part = sum / 3;
+        
+        int s = 0, cnt = 0;
+        for (int i = 0; i < A.length; i++) {
+            s += A[i];
+            if (s == part) {
+                s = 0;    cnt++;
+            }
         }
         
-        // Traverse
-        for (int i = 0; i < time.length; i++) {
-            mod[time[i]]--;
-            res += (time[i] != 0) ? mod[60 - time[i]] : mod[0];
-        }
-        
-        return res;
+        return (cnt == 3) ? true : false;
     }
 }

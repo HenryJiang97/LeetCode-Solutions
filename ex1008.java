@@ -1,12 +1,12 @@
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode(int x) { val = x; }
- * }
- */
+
+// Definition for a binary tree node.
+public class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+    TreeNode(int x) { val = x; }
+}
+
 
 class Solution {
     public void insert(TreeNode root, int value) {
@@ -26,7 +26,7 @@ class Solution {
     public TreeNode bstFromPreorder(int[] preorder) {
         if (preorder.length == 0)    return null;
         
-        //
+        
         TreeNode root = new TreeNode(preorder[0]);
         
         for (int i = 1; i < preorder.length; i++) {
