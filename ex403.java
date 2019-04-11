@@ -10,7 +10,7 @@ class Solution {
         if (stones.length == 1)    return true;
         
         Map<Integer, Set<Integer>> map = new HashMap<>();
-        
+        Character.tochar
         for (int i = 0; i < stones.length; i++) {
             map.put(stones[i], new HashSet<Integer>());
         }
