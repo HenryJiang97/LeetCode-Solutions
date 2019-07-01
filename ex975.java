@@ -1,39 +1,32 @@
-// DP, TreeMap: key=>the value at position i; value=>the next index
-
-import java.util.*;
-
 class Solution {
     public int oddEvenJumps(int[] A) {
         int n = A.length;
+        if (n <= 1)    return n;
+        
+        // Build dp array
         boolean[] dp_odd = new boolean[n];
         boolean[] dp_even = new boolean[n];
         dp_odd[n - 1] = true;    dp_even[n - 1] = true;
         
-        // Treemap to store the next valid jump destination for position i
+        // Build treemap
         TreeMap<Integer, Integer> treemap = new TreeMap<>();
         treemap.put(A[n - 1], n - 1);
         
-        // Build dp array
         for (int i = n - 2; i >= 0; i--) {
-            int k = A[i];
-            // Get from treemap
-            if (treemap.containsKey(k)) {
-                dp_odd[i] = dp_even[treemap.get(k)];
-                dp_even[i] = dp_odd[treemap.get(k)];
-            } else {
-                int index_odd = treemap.higherKey(k) == null ? -1 : treemap.higherKey(k);
-                int index_even = treemap.lowerKey(k) == null ? -1 : treemap.lowerKey(k);
-                dp_odd[i] = index_odd != -1 ? dp_even[treemap.get(index_odd)] : false;
-                dp_even[i] = index_even != -1 ? dp_odd[treemap.get(index_even)] : false;
-            }
-            treemap.put(k, i);
+            Integer odd_next = treemap.ceilingKey(A[i]);
+            Integer even_next = treemap.floorKey(A[i]);
+
+            dp_odd[i] = odd_next == null ? false : dp_even[treemap.get(odd_next)];
+            dp_even[i] = even_next == null ? false : dp_odd[treemap.get(even_next)];
+            
+            treemap.put(A[i], i);
         }
         
-        // Get the result
-        int cnt = 0;
-        for (int i = 0; i < n; i++) {
-            if (dp_odd[i])    cnt++;
-        }
-        return cnt;
+        // Get results
+        int res = 0;
+        for (int i = 0; i < n; i++)
+            if (dp_odd[i])    res++;
+        
+        return res;
     }
 }
