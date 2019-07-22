@@ -15,44 +15,31 @@
  *     public List<NestedInteger> getList();
  * }
  */
-
-import java.util.List;;
-import java.util.ArrayList;
-import java.util.Iterator;
-
 public class NestedIterator implements Iterator<Integer> {
-    public List<Integer> list;
-    public Iterator<Integer> iterator;
-    
-    
+    List<Integer> list;
+    int p;
+
     public NestedIterator(List<NestedInteger> nestedList) {
-        // Build result list
         list = new ArrayList<Integer>();
-        build(nestedList);
-         
-        
-        System.out.println(list);
-        
-        iterator = list.iterator();
+        p = 0;
+        iterate(nestedList);
     }
     
-    // Build list
-    public void build(List<NestedInteger> nestedList) {
-        for (NestedInteger ni : nestedList) {         
+    public void iterate(List<NestedInteger> nestedList) {
+        for (NestedInteger ni : nestedList) {
             if (ni.isInteger())    list.add(ni.getInteger());
-            else    build(ni.getList());
+            else    iterate(ni.getList());
         }
     }
-    
 
     @Override
     public Integer next() {
-        return iterator.next();
+        return list.get(p++);
     }
 
     @Override
     public boolean hasNext() {
-        if (iterator.hasNext())    return true;
+        if (p < list.size())    return true;
         else    return false;
     }
 }
