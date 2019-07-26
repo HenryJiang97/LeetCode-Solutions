@@ -1,6 +1,6 @@
 ## Personal LeetCode Solutions
 
-* Solution language: Java || C++ || Python *
+* Solution language: Java || C++ || Python 3
 
 Personal solutions and explanations to leetcode problems I've done.
 
