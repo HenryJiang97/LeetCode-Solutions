@@ -13,3 +13,4 @@ Just for reference, welcome to improve these solutions for me, thanks.
 |:---:|:-----------:|:----------:|:----------:|:--------:|
 | 127 | Word Ladder | 24.8% | Medium | [Link](https://github.com/HenryJiang97/LeetCode-Solutions/issues/1) |
 | 160 | Intersection of Two Linked Lists | 34.7% | Easy | [Link](https://github.com/HenryJiang97/LeetCode-Solutions/issues/2) |
+| 763 | Partition Labels | 71.4% | Medium | [Link](https://github.com/HenryJiang97/LeetCode-Solutions/issues/3) |
