@@ -1,27 +1,25 @@
-// Stack
+// Monotone stack
 
 class Solution {
 public:
     vector<int> nextGreaterElements(vector<int>& nums) {
         int n = nums.size();
-        vector<int> newNums(2 * n);
-        for (int i = 0; i < n; i++)    newNums[i] = nums[i];
-        for (int i = 0; i < n; i++)    newNums[i + n] = nums[i];
         
-        vector<int> temp(n * 2, INT_MIN);
-        stack<pair<int, int>> stack;
-        for (int i = 0; i < 2 * n; i++) {
-            while (!stack.empty() && newNums[i] > stack.top().first) {
-                temp[stack.top().second] = newNums[i];
-                stack.pop();
-            }   
-            stack.push(make_pair(newNums[i], i));
+        for (int i = 0; i < n; i++)    nums.push_back(nums[i]);
+        
+        vector<int> temp(2 * n, -1);
+        stack<int> stk;    stk.push(0);
+        
+        for (int i = 1; i < 2 * n; i++) {
+            while (!stk.empty() && nums[stk.top()] < nums[i]) {
+                temp[stk.top()] = nums[i];
+                stk.pop();
+            }
+            stk.push(i);
         }
         
-        // Get result
-        vector<int> res(n);
-        for (int i = 0; i < n; i++)
-            res[i] = temp[i] == INT_MIN ? -1 : temp[i];
+        // Copy the first n elements to the result
+        vector<int> res(temp.begin(), temp.begin() + n);
         
         return res;
     }
