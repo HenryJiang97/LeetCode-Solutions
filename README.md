@@ -15,4 +15,4 @@ Just for reference, welcome to improve these solutions for me, thanks.
 | 160 | Intersection of Two Linked Lists | 34.7% | Easy | [Link](https://github.com/HenryJiang97/LeetCode-Solutions/issues/2) |
 | 763 | Partition Labels | 71.4% | Medium | [Link](https://github.com/HenryJiang97/LeetCode-Solutions/issues/3) |
 | 316 | Remove Duplicate Letters | 33.0% | Hard | [Link](https://github.com/HenryJiang97/LeetCode-Solutions/issues/4) |
-| 76 | Minimum Window Substring | 31.4% | Hard | [Lind](https://github.com/HenryJiang97/LeetCode-Solutions/issues/5) |
+| 76 | Minimum Window Substring | 31.4% | Hard | [Link](https://github.com/HenryJiang97/LeetCode-Solutions/issues/5) |
