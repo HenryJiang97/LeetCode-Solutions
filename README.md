@@ -16,3 +16,4 @@ Just for reference, welcome to improve these solutions for me, thanks.
 | 763 | Partition Labels | 71.4% | Medium | [Link](https://github.com/HenryJiang97/LeetCode-Solutions/issues/3) |
 | 316 | Remove Duplicate Letters | 33.0% | Hard | [Link](https://github.com/HenryJiang97/LeetCode-Solutions/issues/4) |
 | 76 | Minimum Window Substring | 31.4% | Hard | [Link](https://github.com/HenryJiang97/LeetCode-Solutions/issues/5) |
+| 91 | Decode Ways | 22.6% | Medium | [Link](https://github.com/HenryJiang97/LeetCode-Solutions/issues/6) |
