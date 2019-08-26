@@ -1,52 +1,61 @@
+// Segment Tree
+
 class NumArray {
-    int [] sum_tree;
+    public int[] segTree;    // Define a segment tree
+    public int n;
     
     public NumArray(int[] nums) {
-        if (nums.length == 0)   sum_tree = new int[1];
-        else {
-            // Build a segmented tree
-            sum_tree = new int[nums.length * 2];
+        n = nums.length;
+        segTree = new int[n * 2];
+        buildTree(nums);
+    }
+    
+    private void buildTree(int[] nums) {
+        // Base case, build leaves: [n : 2 * n - 1]
+        for (int i = 0; i < n; i++)
+            segTree[i + n] = nums[i];
         
-            for (int i = nums.length, j = 0; i < sum_tree.length; i++, j++)    sum_tree[i] = nums[j];
-            for (int i = nums.length - 1; i >= 1; i--)    sum_tree[i] = sum_tree[i * 2] + sum_tree[i * 2 + 1];
-            
-        }
-        
+        // Build roots: [1 : n - 1]
+        for (int i = n - 1; i > 0; --i)
+            segTree[i] = segTree[i * 2] + segTree[i * 2 + 1];
     }
     
     public void update(int i, int val) {
-        int diff = val - sum_tree[sum_tree.length / 2 + i];
-        // Set the leaf value to the updated value
-        sum_tree[sum_tree.length / 2 + i] = val;
+        i += n;
+        segTree[i] = val;
+        i = i % 2 == 0 ? i / 2 : (i - 1) / 2;
         
-        // Deal with parents nodes
-        int start = (sum_tree.length / 2 + i) / 2;
-        
-        for (int j = start; j > 0; j /= 2)    sum_tree[j] += diff;
+        while (i > 0) {    // Update every element on this branch
+            segTree[i] = segTree[i * 2] + segTree[i * 2 + 1];
+            i = i % 2 == 0 ? i / 2 : (i - 1) / 2;
+        }
     }
     
     public int sumRange(int i, int j) {
+        i += n;    j += n;
         
         int sum = 0;
-        
-        i += sum_tree.length / 2;
-        j += sum_tree.length / 2;
-        
-        while (i <= j) {
+        while (i <= j) {    // Track up the tree for sum
             if (i % 2 != 0) {
-                sum += sum_tree[i];
+                sum += segTree[i];
                 i++;
             }
             
             if (j % 2 == 0) {
-                sum += sum_tree[j];
+                sum += segTree[j];
                 j--;
             }
             
-            i /= 2;
-            j /= 2;
+            i /= 2;    j /= 2;
         }
         
         return sum;
     }
 }
+
+/**
+ * Your NumArray object will be instantiated and called as such:
+ * NumArray obj = new NumArray(nums);
+ * obj.update(i,val);
+ * int param_2 = obj.sumRange(i,j);
+ */

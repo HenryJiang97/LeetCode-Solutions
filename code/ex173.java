@@ -7,44 +7,33 @@
  *     TreeNode(int x) { val = x; }
  * }
  */
-
-import java.util.Stack;
-
 class BSTIterator {
-    public TreeNode p;
-    public Stack<TreeNode> stack;
-    
+    Stack<TreeNode> stack = new Stack<>();
+
     public BSTIterator(TreeNode root) {
-        // Init p and stack
-        p = root;
-        stack = new Stack<TreeNode>();
+        addLeftBranch(root);
+    }
+    
+    private void addLeftBranch(TreeNode root) {
+        TreeNode node = root;
         
-        while (p != null) {
-            stack.push(p);
-            p = p.left;
+        // Nove to the left end node
+        while (node != null) {
+            stack.push(node);
+            node = node.left;
         }
     }
     
     /** @return the next smallest number */
     public int next() {
-        int val;
-        p = stack.pop();
-        val = p.val;
-        
-        // Move p to the next least num
-        p = p.right;
-        while (p != null) {
-            stack.push(p);
-            p = p.left;
-        }
-        
-        return val;
+        TreeNode node = stack.pop();
+        if (node.right != null)    addLeftBranch(node.right);
+        return node.val;
     }
     
     /** @return whether we have a next smallest number */
     public boolean hasNext() {
-        if (!stack.isEmpty())    return true;
-        else    return false;
+        return !stack.isEmpty();
     }
 }
 
