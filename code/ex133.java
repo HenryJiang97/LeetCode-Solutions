@@ -1,4 +1,4 @@
-// DFS
+// DFS with memo
 
 /*
 // Definition for a Node.
@@ -14,32 +14,25 @@ class Node {
     }
 };
 */
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
-
 class Solution {
-    private HashMap<Node, Node> visited = new HashMap<>();
+    public Map<Node, Node> cloned = new HashMap<>();
     
     public Node cloneGraph(Node node) {
-        // If map already contains the node, just return it
-        if (visited.containsKey(node))    return visited.get(node);
+        // If cloned before, just load the memo
+        if (cloned.containsKey(node))    return cloned.get(node);
         
-        // Create new cloned node
-        Node clone = new Node();
-        clone.val = node.val;
-        visited.put(node, clone);    // Add node to visited for later use
+        // If not cloned, create a new node
+        Node newNode = new Node();
+        newNode.val = node.val;
         
-        // Clone neighbors list
-        List<Node> nei = new ArrayList<>();
-        for (Node n : node.neighbors) {
-            Node nclone = cloneGraph(n);
-            nei.add(nclone);
+        List<Node> neiList = new ArrayList<>();
+        newNode.neighbors = neiList;
+        cloned.put(node, newNode);    // Save to memo
+        
+        for (Node nei : node.neighbors) {
+            neiList.add(cloneGraph(nei));
         }
         
-        clone.neighbors = nei;
-        
-        return clone;
+        return newNode;
     }
 }
