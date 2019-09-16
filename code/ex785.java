@@ -1,8 +1,5 @@
 // BFS
 
-import java.util.Queue;
-import java.util.LinkedList;
-
 class Solution {
     public boolean isBipartite(int[][] graph) {
         int[] color = new int[graph.length];
