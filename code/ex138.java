@@ -14,26 +14,23 @@ class Node {
     }
 };
 */
-
-import java.util.HashMap;
-
 class Solution {
-    HashMap<Node, Node> map = new HashMap<>();
+    private Map<Node, Node> map = new HashMap<>();
     
     public Node copyRandomList(Node head) {
-        // If map already contains the copied head node, return it
-        if (map.containsKey(head))    return map.get(head);
         if (head == null)    return null;
         
-        // Create new copied node n
-        Node n = new Node();
-        map.put(head, n);    // Save the node to map for future use
+        if (map.containsKey(head))    return map.get(head);
         
-        // Init node n
-        n.val = head.val;     
-        n.next = copyRandomList(head.next);
-        n.random = copyRandomList(head.random);
+        // Create new node
+        Node newNode = new Node();
+        map.put(head, newNode);
         
-        return n;
+        // Build the new node
+        newNode.val = head.val;
+        newNode.next = copyRandomList(head.next);
+        newNode.random = copyRandomList(head.random);
+        
+        return newNode;
     }
 }
