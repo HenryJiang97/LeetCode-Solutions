@@ -1,35 +1,34 @@
 class FreqStack {
-    Map<Integer, Integer> app;    // Store the appearance of each integer
-    Map<Integer, Stack<Integer>> pos;    // Store each integer with same appearance
-    int mapp;    // Max appearance
-    
+    public Map<Integer, Stack<Integer>> freq2int;
+    public Map<Integer, Integer> int2freq;
+    public int maxFreq;
+
     public FreqStack() {
-        app = new HashMap<Integer, Integer>();
-        pos = new HashMap<Integer, Stack<Integer>>();
-        mapp = 0;
+        freq2int = new HashMap<Integer, Stack<Integer>>();
+        int2freq = new HashMap<Integer, Integer>();
+        maxFreq = 0;
     }
     
     public void push(int x) {
-        // Update app map and freq
-        app.put(x, app.getOrDefault(x, 0) + 1);
-        mapp = Math.max(mapp, app.get(x));
+        // Update int2freq
+        int2freq.put(x, int2freq.getOrDefault(x, 0) + 1);
+        maxFreq = Math.max(maxFreq, int2freq.get(x));
         
-        // Update pos map by grouping integers with same appearance
-        int appearance = app.get(x);
-        Stack<Integer> stack = pos.getOrDefault(appearance, new Stack<Integer>());
-        stack.push(x);
-        pos.put(appearance, stack);
+        // Update freq2int
+        Stack<Integer> stk = freq2int.getOrDefault(int2freq.get(x), new Stack<Integer>());
+        stk.push(x);
+        freq2int.put(int2freq.get(x), stk);
     }
     
     public int pop() {
-        int out = pos.get(mapp).pop();
+        int out = freq2int.get(maxFreq).pop();
         
-        // Update app map
-        app.put(out, app.get(out) - 1);
-        if (app.get(out) == 0)    app.remove(out);
+        // Update int2freq
+        int2freq.put(out, int2freq.get(out) - 1);
+        if (int2freq.get(out) == 0)    int2freq.remove(out);
         
-        // Update pos map and mapp
-        if (pos.get(mapp).size() == 0)    pos.remove(mapp--);    
+        // Update freq2int
+        if (freq2int.get(maxFreq).size() == 0)    freq2int.remove(maxFreq--);
         
         return out;
     }
