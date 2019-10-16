@@ -1,6 +1,7 @@
 // Topological ordering
 // Every time there must only be one node having no indegree, or there will be more than one ordering.
 // Every node must exist in the sequence.
+// O(max(nodes in seqs, nodes in org))
 
 class Solution {
 public:
