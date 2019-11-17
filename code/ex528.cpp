@@ -1,33 +1,33 @@
 class Solution {
-    int total = 0;
-    vector<int> prefix;
+    vector<int> starting;    // Save the starting sum value of each element(idx)
+    int sum = 0;
 public:
     Solution(vector<int>& w) {
-        total = accumulate(w.begin(), w.end(), 0);
-        prefix.push_back(0);
+        starting.resize(w.size());
         for (int i = 0; i < w.size(); i++) {
-            prefix.push_back(prefix.back() + w[i]);
+            sum += w[i];
+            if (i + 1 < w.size())
+                starting[i + 1] = sum;
         }
     }
     
     int pickIndex() {
-        // Get random from 0 to total - 1
-        int random = rand() % total;
-
-        // Binary search for random in prefix
-        int n = prefix.size();
-        int lo = 0, hi = n - 1;
-        while (lo < hi) {
-            int mid = (lo + hi) / 2;
-            if (prefix[mid] == random)    return mid;
-            else if (prefix[mid] < random)    lo = mid + 1;
-            else {
-                if (mid - 1 >= 0 && prefix[mid - 1] > random)   hi = mid - 1;
-                else    return mid - 1;
-            }
+        int random = rand() % sum;
+        
+        // Binary search
+        int lo = 0, hi = starting.size() - 1;
+        while (lo <= hi) {
+            int mid = lo + (hi - lo) / 2;
+            if (starting[mid] > random)
+                hi = mid - 1;
+            else
+                if (mid + 1 >= starting.size() || starting[mid + 1] > random)
+                    return mid;
+                else
+                    lo = mid + 1;
         }
         
-        return lo - 1;
+        return -1;
     }
 };
 
@@ -36,12 +36,3 @@ public:
  * Solution* obj = new Solution(w);
  * int param_1 = obj->pickIndex();
  */
-
-// 0-3
-// Random:
-// 0, 1, 2, 3
-    
-// prefix:
-// 0, 1, 4
-    
-// 0, 1, 1, 1
