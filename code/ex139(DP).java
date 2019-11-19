@@ -1,7 +1,5 @@
 // DP, dp[i] => if substring(0, i) is in can be segmented
 
-import java.util.*;
-
 class Solution {
     public boolean wordBreak(String s, List<String> wordDict) {
         boolean dp[] = new boolean[s.length() + 1];
