@@ -1,3 +1,5 @@
+// Sliding window
+
 class Solution {
 public:
     int balancedString(string s) {
