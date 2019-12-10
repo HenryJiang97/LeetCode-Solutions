@@ -20,15 +20,8 @@ public:
                 
                 // Get numerator and denominator of the slope and counts
                 int numerator = y1 - y2, denominator = x1 - x2;
-                int gcd = getGCD(numerator, denominator);
-                if (gcd != 0) {
-                    numerator /= gcd;
-                    denominator /= gcd;
-                }
-                if (numerator < 0) {
-                    numerator /= -1;
-                    denominator /= -1;
-                }
+                int GCD = gcd(numerator, denominator);
+                numerator /= GCD;    denominator /= GCD;
                 map[numerator][denominator]++;
             }
             
@@ -39,10 +32,5 @@ public:
         }
         
         return MAX;
-    }
-    
-    int getGCD(int a, int b) {
-        if (b == 0)    return a;
-        return gcd(b, a % b);
     }
 };
