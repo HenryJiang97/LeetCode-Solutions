@@ -3,45 +3,45 @@
 class Solution {
 public:
     string minWindow(string s, string t) {
-        int start = -1, end = -1, MIN = s.length() + 1;
+        int n = s.length();
         
-        unordered_map<char, int> map;    // Store the appearance of each character in the sliding window
-        unordered_map<char, int> set;    // Store the appearance of each character in string t
-        for (char c : t) {
-            map[c] = 0;
-            set[c] = set.find(c) != set.end() ? set[c] + 1 : 1;
-        }
-        int n = set.size();
-
-        // Sliding window
-        int e = 0;    // Needed element in the sliding window
-        int left = 0, right = 0;
-        while (right < s.length()) {
-            // Shift the right pointer right
-            if (set.find(s[right]) != set.end()) {
-                if (map[s[right]] < set[s[right]] && map[s[right]] + 1 >= set[s[right]])    e++;
-                map[s[right]]++;
-            }
-
-            // Shift the left pointer right
-            while (e == n && left <= right) {
-                // Once all char in t appears in the map, update start and end
-                int interval = right - left + 1;
-                if (interval < MIN) {
-                    start = left;    end = right;
-                    MIN = interval;
+        // Store the cnt of required chars in t
+        unordered_map<char, int> cnt;
+        for (char c : t)    cnt[c]++;
+        
+        string res = s + " ";
+        int lo = 0, MIN = s.length();
+        unordered_map<char, int> cntWindow;    // Store the cnt of required chars in window
+        unordered_set<char> inWindow;    // Char required which meets the cnt in window
+        for (int hi = 0; hi < n; hi++) {
+            // Try to move lo pointer as right as possible
+            while (inWindow.size() == cnt.size()) {
+                if (hi - lo < res.length())
+                    res = s.substr(lo, hi - lo);
+                if (cnt.find(s[lo]) != cnt.end()) {
+                    if (--cntWindow[s[lo]] < cnt[s[lo]])
+                        inWindow.erase(s[lo]);
                 }
-                //
-                
-                if (set.find(s[left]) != set.end()) {
-                    if (--map[s[left]] < set[s[left]])    e--;
-                }
-                left++;
+                lo++;
             }
-            
-            right++;
+            // Move hi 1 place to the right
+            if (cnt.find(s[hi]) != cnt.end()) {
+                if (++cntWindow[s[hi]] >= cnt[s[hi]])
+                    inWindow.insert(s[hi]);
+            }
         }
         
-        return start == -1 ? "" : s.substr(start, end - start + 1);
+        // Tail
+        while (inWindow.size() == cnt.size()) {
+            if (n - lo < res.length())
+                res = s.substr(lo);
+            if (cnt.find(s[lo]) != cnt.end()) {
+                if (--cntWindow[s[lo]] < cnt[s[lo]])
+                    inWindow.erase(s[lo]);
+            }
+            lo++;
+        }
+        
+        return res == s + " " ? "" : res;
     }
 };
