@@ -2,20 +2,19 @@ class Solution {
     int val = 0;
 public:
     vector<int> grayCode(int n) {
-        vector<int> res;
-        backtracking(res, n);
-        return res;
+        return generateGreyCode(n);
     }
     
 private:
-    void backtracking(vector<int>& res, int n) {
-        if (n == 0) {
-            res.push_back(val);
-            return;
-        } else {
-            backtracking(res, n - 1);
-            val = val ^ (1 << (n - 1));
-            backtracking(res, n - 1);
+    vector<int> generateGreyCode(int n) {
+        vector<int> res;
+        res.push_back(0);
+        for (int i = 0; i < n; i++) {
+            int size = res.size();
+            for (int j = size - 1; j >= 0; j--) {
+                res.push_back(res[j] + (1 << i));
+            }
         }
+        return res;
     }
 };
