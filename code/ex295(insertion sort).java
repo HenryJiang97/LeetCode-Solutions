@@ -1,5 +1,5 @@
 class MedianFinder {
-    List<Integer> list;
+    public List<Integer> list;
 
     /** initialize your data structure here. */
     public MedianFinder() {
