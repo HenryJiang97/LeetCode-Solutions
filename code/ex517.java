@@ -13,8 +13,8 @@ class Solution {
             machines[i + 1] += machines[i] - avg;
         }
         
-        int min = Integer.MIN_VALUE;
-        for (int d : dp)    min = Math.max(min, d);
-        return min;
+        int res = Integer.MIN_VALUE;
+        for (int d : dp)    res = Math.max(res, d);
+        return res;
     }
 }
