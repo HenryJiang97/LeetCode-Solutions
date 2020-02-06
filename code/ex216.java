@@ -1,32 +1,23 @@
-import java.util.List;
-import java.util.ArrayList;
-
 class Solution {
-    private void dfs(List<List<Integer>> result, List<Integer> combination, int k, int n, int lo, int sum) {
-        // Get a valid solution
-        if (sum == n && combination.size() == k) {
-            result.add(new ArrayList<Integer>(combination));
-            return;
-        }
-        
-        for (int i = lo + 1; i <= 9; i++) {
-            if (sum + i > n)    return;
-                
-            sum += i;
-            combination.add(i);
-            dfs(result, combination, k, n, i, sum);
-            
-            // Recover combination and sum to former state
-            combination.remove(combination.size() - 1);
-            sum -= i;
-        }
-    }
+    private List<List<Integer>> res = new ArrayList<>();
+    private List<Integer> cur = new ArrayList<>();
     
     public List<List<Integer>> combinationSum3(int k, int n) {
-        List<List<Integer>> result = new ArrayList<>();
+        backtracking(k, n, 1, 0);
+        return res;
+    }
+    
+    private void backtracking(int k, int target, int s, int sum) {
+        if (sum == target && cur.size() == k) {
+            res.add(new ArrayList<>(cur));
+            return;
+        }
+        if (sum > target || cur.size() >= k)    return;
         
-        dfs(result, new ArrayList<Integer>(), k, n, 0, 0);
-        
-        return result;
+        for (int i = s; i <= 9 && sum + i <= target ; i++) {
+            cur.add(i);
+            backtracking(k, target, i + 1, sum + i);
+            cur.remove(cur.size() - 1);
+        }
     }
 }
