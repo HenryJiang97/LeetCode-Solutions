@@ -1,61 +1,48 @@
-// Union Find
-
 class Solution {
+    const int n = 10000;
+
 public:
     int removeStones(vector<vector<int>>& stones) {
-        int n = 10000;
-        
-        // Define root map
-        unordered_map<int, int> root;
-        
-        // Build map for x coordinate and y coordinate
-        unordered_map<int, vector<int>> mapX, mapY;
+        unordered_map<int, int> row;
+        unordered_map<int, int> col;
+        unordered_map<int, int> parent;
+
+        // Union
         for (auto& stone : stones) {
-            int i = stone[0], j = stone[1];
-            root[i * n + j] = i * n + j;
-            mapX[i].push_back(i * n + j);
-            mapY[j].push_back(i * n + j);
+            int r = stone[0], c = stone[1];
+            int hcode = r * n + c;
+            parent[hcode] = hcode;
+            
+            if (row.find(r) == row.end())    row[r] = hcode;
+            else    uni(parent, row[r], hcode);
+            if (col.find(c) == col.end())    col[c] = hcode;
+            else    uni(parent, col[c], hcode);
         }
         
-        // Union stones on the same x coordinate
-        for (auto entry : mapX) {
-            vector<int>& group = entry.second;
-            int point0 = group[0];
-            for (int i = 1; i < group.size(); i++) {
-                uni(root, point0, group[i]);
-            }
-        }
-        
-        // Union stones on the same y coordinate
-        for (auto entry : mapY) {
-            vector<int>& group = entry.second;
-            int point0 = group[0];
-            for (int i = 1; i < group.size(); i++) {
-                uni(root, point0, group[i]);
-            }
-        }
-        
-        unordered_set<int> set;
+        // Find groups
+        unordered_map<int, int> cnt;
         for (auto& stone : stones) {
-            int node = stone[0] * n + stone[1];
-            set.insert(find(root, node));
+            int hcode = stone[0] * n + stone[1];
+            cnt[find(parent, hcode)]++;
         }
         
-        return stones.size() - set.size();
+        // Get moves
+        int res = 0;
+        for (auto entry : cnt)
+            res += entry.second - 1;
+        return res;
     }
     
 private:
-    int find(unordered_map<int, int>& root, int p) {
-        if (root[p] != p)
-            root[p] = find(root, root[p]);
-        return root[p];
+    void uni(unordered_map<int, int>& parent, int a, int b) {
+        int ra = find(parent, a), rb = find(parent, b);
+        if (ra <= rb)    parent[rb] = ra;
+        else    parent[ra] = rb;
     }
     
-    void uni(unordered_map<int, int>& root, int a, int b) {
-        int ra = find(root, a), rb = find(root, b);
-        if (ra <= rb)
-            root[rb] = ra;
-        else
-            root[ra] = rb;
+    int find(unordered_map<int, int>& parent, int a) {
+        if (parent[a] != a)
+            parent[a] = find(parent, parent[a]);
+        return parent[a];
     }
 };
