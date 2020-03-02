@@ -2,21 +2,20 @@
 
 class Solution {
     public boolean splitArraySameAverage(int[] A) {
-        int N = A.length;
-        int S = 0;
-        for (int a : A)    S += a;
-        double avg = (double)S / N;
+        int n = A.length;
+        int sum = 0;
+        for (int a : A)    sum += a;
+        double avg = (double)sum / n;
         
-        boolean[][] dp = new boolean[N + 1][S + 1];
+        boolean[][] dp = new boolean[n + 1][sum + 1];
         dp[0][0] = true;
         
         for (int a : A) {
-            for (int n = N; n >= 1; n--) {
-                for (int s = S; s >= 0; s--) {
-                    if (s - a >= 0 && dp[n - 1][s - a]) {
-                        dp[n][s] = true;
-
-                        if (n != N && (double)s / n == avg)
+            for (int i = n; i >= 1; i--) {
+                for (int s = sum; s >= a; s--) {
+                    if (dp[i - 1][s - a]) {
+                        dp[i][s] = true;
+                        if (i < n && (double)s / i == avg)
                             return true;
                     }
                 }
