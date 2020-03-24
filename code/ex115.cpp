@@ -1,19 +1,22 @@
 class Solution {
 public:
     int numDistinct(string s, string t) {
-        int nt = t.length(), ns = s.length();
-        auto dp = vector<vector<long>>(nt + 1, vector<long>(ns + 1));
-        for (int ps = 0; ps <= ns; ps++)    dp[0][ps] = 1;
+        int ns = s.length(), nt = t.length();
         
-        for (int pt = 1; pt <= nt; pt++) {
-            for (int ps = 1; ps <= ns; ps++) {
-                if (s[ps - 1] == t[pt - 1])
-                    dp[pt][ps] = dp[pt][ps - 1] + dp[pt - 1][ps - 1];
+        // Define and init dp array
+        vector<vector<long>> dp(ns + 1, vector<long>(nt + 1));
+        for (int i = 0; i <= ns; i++)    dp[i][0] = 1;
+        
+        // Build dp array
+        for (int i = 1; i <= ns; i++) {
+            for (int j = 1; j <= nt; j++) {
+                if (s[i - 1] == t[j - 1])
+                    dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j];
                 else
-                    dp[pt][ps] = dp[pt][ps - 1];
+                    dp[i][j] = dp[i - 1][j];
             }
         }
         
-        return dp[nt][ns];
+        return dp[ns][nt];
     }
 };
