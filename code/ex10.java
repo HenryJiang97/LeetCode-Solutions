@@ -17,7 +17,7 @@ class Solution {
             if (P[j - 1] == '*') {    // If current position is '*'
                 dp[0][j] = dp[0][j - 2];
             }
-        }       
+        }
         
         // Build dp array
         for (int i = 1; i <= ns; i++) {
