@@ -1,43 +1,33 @@
-// Denote that -1 => alive to die; 2 => die to alive
+// 0 => dead
+// 1 => alive
+// 2 => dead -> alive
+// 3 => alive -> dead
+
+const int dir[8][2] = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
 
 class Solution {
 public:
     void gameOfLife(vector<vector<int>>& board) {
-        int m = board.size();    if (m == 0)    return;
-        int n = board[0].size();    if (n == 0)    return;
+        int m = board.size(), n = board[0].size();
         
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                int live = 0;
+                int alive = 0;
                 
-                // Check eight directions
-                if (i - 1 >= 0 && (board[i - 1][j] == 1 || board[i - 1][j] == -1))    live++;
-                if (j - 1 >= 0 && (board[i][j - 1] == 1 || board[i][j - 1] == -1))    live++;
-                if (i + 1 < m && (board[i + 1][j] == 1 || board[i + 1][j] == -1))    live++;
-                if (j + 1 < n && (board[i][j + 1] == 1 || board[i][j + 1] == -1))    live++;
-                if (i + 1 < m && j + 1 < n && (board[i + 1][j + 1] == 1 || board[i + 1][j + 1] == -1))    live++;
-                if (i - 1 >= 0 && j + 1 < n && (board[i - 1][j + 1] == 1 || board[i - 1][j + 1] == -1))    live++;
-                if (i + 1 < m && j - 1 >= 0 && (board[i + 1][j - 1] == 1 || board[i + 1][j - 1] == -1))    live++;
-                if (i - 1 >= 0 && j - 1 >= 0 && (board[i - 1][j - 1] == 1 || board[i - 1][j - 1] == -1))    live++;
-               	
-               	// Die
-               	if (live < 2 || live > 3) {
-               		if (board[i][j] == 1)    board[i][j] = -1;
-               	}
-               	// Alive
-               	if (live == 3) {
-               		if (board[i][j] == 0)    board[i][j] = 2;
-               	}
-               	
+                for (auto& d : dir) {
+                    int ni = i + d[0], nj = j + d[1];
+                    if (ni < 0 || nj < 0 || ni >= m || nj >= n)    continue;
+                    if (board[ni][nj] == 1 || board[ni][nj] == 3)    alive++;
+                }
+                
+                if (board[i][j] == 1 && alive < 2)    board[i][j] = 3;
+                if (board[i][j] == 1 && alive > 3)    board[i][j] = 3;
+                if (board[i][j] == 0 && alive == 3)    board[i][j] = 2;
             }
         }
-
-        // Replace -1 and 2
-        for (int i = 0; i < m; i++) {
-        	for (int j = 0; j < n; j++) {
-        		if (board[i][j] == -1)    board[i][j] = 0;
-        		if (board[i][j] == 2)    board[i][j] = 1;
-        	}
-        }
+        
+        for (int i = 0; i < m; i++)
+            for (int j = 0; j < n; j++)
+                board[i][j] = board[i][j] == 0 || board[i][j] == 3 ? 0 : 1;
     }
 };
