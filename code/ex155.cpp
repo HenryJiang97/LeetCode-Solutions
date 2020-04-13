@@ -1,34 +1,26 @@
-// Hash Map
-
 class MinStack {
+    stack<pair<int, int>> stk;
 public:
-    stack<int> s;
-    int MIN = INT_MAX, cnt = 0;
-    unordered_map<int, int> map;    // Save the minimum number while the stack has i items
-    
     /** initialize your data structure here. */
     MinStack() {
-        map[0] = INT_MAX;
+        
     }
     
     void push(int x) {
-        s.push(x);
-        MIN = min(MIN, x);
-        map[++cnt] = MIN;
+        if (stk.empty())    stk.push({x, x});
+        else    stk.push({x, min(x, stk.top().second)});
     }
     
     void pop() {
-        s.pop();
-        map.erase(cnt--);
-        MIN = map[cnt];
+        stk.pop();
     }
     
     int top() {
-        return s.top();
+        return stk.top().first;
     }
     
     int getMin() {
-        return map[cnt];
+        return stk.top().second;
     }
 };
 
