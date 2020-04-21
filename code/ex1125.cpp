@@ -5,7 +5,7 @@ public:
     vector<int> smallestSufficientTeam(vector<string>& skills, vector<vector<string>>& people) {
         int ns = skills.size(), np = people.size();
         
-        // Issue indexes for each required skills
+        // Issue indexes for each required skill
         unordered_map<string, int> m;
         for (string skill : skills)
             m[skill] = m.size();
