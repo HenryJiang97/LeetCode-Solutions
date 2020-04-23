@@ -2,19 +2,18 @@ class Solution {
 public:
     int subarraySum(vector<int>& nums, int k) {
         int n = nums.size();
-        if (n == 1 && nums[0] != k)    return 0;
-        if (n == 1 && nums[0] == k)    return 1;
         
-        // Build prefix sum array
-        int prefix[n + 1];    prefix[0] = 0;
+        vector<int> prefix(n + 1);
         for (int i = 0; i < n; i++)
             prefix[i + 1] = prefix[i] + nums[i];
         
+        unordered_map<int, int> m;    // {prefix, cnt}
+        m[0] = 1;
         int cnt = 0;
-        unordered_map<int, int> map;
-        for (int i = 0; i <= n; ++i) {
-            if (map.find(prefix[i] - k) != map.end())    cnt += map[prefix[i] - k];
-            map[prefix[i]]++;
+        for (int i = 1; i <= n; i++) {
+            if (m.find(prefix[i] - k) != m.end())
+                cnt += m[prefix[i] - k];
+            m[prefix[i]]++;
         }
         
         return cnt;
