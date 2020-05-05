@@ -3,42 +3,18 @@ public:
     int mincostTickets(vector<int>& days, vector<int>& costs) {
         int n = days.size();
         
-        int c1 = costs[0], c7 = costs[1], c30 = costs[2];
-        map<int, int> m;
-        m[days[0]] = c1;
+        vector<int> dp(n, INT_MAX);
+        dp[0] = min(costs[0], min(costs[1], costs[2]));
         
         for (int i = 1; i < n; i++) {
-            int MIN = INT_MAX;
-            
-            // Purchase an one day pass
-            auto it = --m.lower_bound(days[i]);
-            MIN = min(MIN, (*it).second + c1);
-            
-            // Purchase a seven days pass
-            it = --m.upper_bound(days[i] - 7);
-            auto p = --m.end();
-            while (1) {
-                MIN = min(MIN, (*p).second + c7);
-                if (p == m.begin() || p == it)    break;
-                p--;
+            dp[i] = dp[i - 1] + min(costs[0], min(costs[1], costs[2]));
+            for (int j = i - 1; j >= 0 && days[i] - days[j] + 1 <= 30; j--) {
+                int day = days[i] - days[j] + 1;
+                dp[i] = min(dp[i], j > 0 ? dp[j - 1] + costs[2] : costs[2]);    // 30-day pass
+                if (day <= 7)    dp[i] = min(dp[i], j > 0 ? dp[j - 1] + costs[1] : costs[1]);    // 7-day pass
             }
-            if (days[i] - 6 <= days[0])
-                MIN = min(MIN, c7);
-                
-            // Purchase a thirty days pass
-            it = --m.upper_bound(days[i] - 30);
-            p = --m.end();
-            while (1) {
-                MIN = min(MIN, (*p).second + c30);
-                if (p == m.begin() || p == it)    break;
-                p--;
-            }
-            if (days[i] - 29 <= days[0])
-                MIN = min(MIN, c30);
-            
-            m[days[i]] = MIN;
         }
         
-        return m[days[n - 1]];
+        return dp[n - 1];
     }
 };
