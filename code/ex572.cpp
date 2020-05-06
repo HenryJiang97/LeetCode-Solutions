@@ -8,45 +8,17 @@
  * };
  */
 class Solution {
-    bool exist = false;
-    
 public:
     bool isSubtree(TreeNode* s, TreeNode* t) {
-        traverse(s, t);
-        
-        return exist;
+        if (s == NULL)    return 0;
+        return check(s, t) || isSubtree(s->left, t) || isSubtree(s->right, t);
     }
     
 private:
-    void traverse(TreeNode* s, TreeNode* t) {
-        if (s == NULL)    return;
-        
-        bool res = false;
-        if (s->val == t->val)    res = check(s, t);
-        if (res)    {exist = true;    return;}
-        
-        // Pre-order traverse
-        traverse(s->left, t);
-        if (exist)    return;
-        
-        traverse(s->right, t);
-        if (exist)    return;
-    }
-    
     bool check(TreeNode* s, TreeNode* t) {
-        if (s == NULL && t == NULL)    return true;
-        if ((s == NULL) || (t == NULL))    return false;
-        
-        // Pre-order traverse
-        bool res = true;
-        if (s->val != t->val)    return false;
-        
-        res = check(s->left, t->left);
-        if (!res)    return false;
-        
-        res = check(s->right, t->right);
-        if (!res)    return false;
-        
-        return res;
+        if (s == NULL && t == NULL)    return 1;
+        else if (s == NULL)    return 0;
+        else if (t == NULL)    return 0;
+        return s->val == t->val && check(s->left, t->left) && check(s->right, t->right);
     }
 };
