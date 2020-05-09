@@ -6,7 +6,7 @@ class MedianFinder {
         this.list = new ArrayList<>();
     }
     
-    public void addNum(int num) {
+    public void addNum(int num) { O(n)
         if (list.size() == 0)    {list.add(num);    return;} 
         // Binary search for position to insert num
         int idx = binarySearch(num);
