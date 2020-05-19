@@ -3,36 +3,24 @@ public:
     int findTheLongestSubstring(string s) {
         int n = s.length();
         
-        int a = 0, e = 0, i = 0, o = 0, u = 0;
-        int MAX = 0;
+        int mask = 0, MAX = 0;
         unordered_map<int, int> m;
-        m[0] = -1;
+        m[mask] = -1;
         
         for (int z = 0; z < n; ++z) {
             char c = s[z];
-            if (c == 'a')    a++;
-            else if (c == 'e')    e++;
-            else if (c == 'i')    i++;
-            else if (c == 'o')    o++;
-            else if (c == 'u')    u++;
-            int mask = getMask(a, e, i, o, u);
-            if (m.find(mask) != m.end())
+            if (c == 'a')    mask ^= (1 << 0);
+            else if (c == 'e')    mask ^= (1 << 1);
+            else if (c == 'i')    mask ^= (1 << 2);
+            else if (c == 'o')    mask ^= (1 << 3);
+            else if (c == 'u')    mask ^= (1 << 4);
+            
+            if (m.count(mask) != 0)
                 MAX = max(MAX, z - m[mask]);
             else
                 m[mask] = z;
         }
         
         return MAX;
-    }
-    
-private:
-    int getMask(int a, int e, int i, int o, int u) {
-        int mask = 0;
-        mask |= ((a % 2) << 0);
-        mask |= ((e % 2) << 1);
-        mask |= ((i % 2) << 2);
-        mask |= ((o % 2) << 3);
-        mask |= ((u % 2) << 4);
-        return mask;
     }
 };
