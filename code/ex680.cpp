@@ -1,32 +1,26 @@
 class Solution {
 public:
     bool validPalindrome(string s) {
-        int n = s.length();    if (n <= 1)    return true;
+        int lo = 0, hi = s.length() - 1;
         
-        int del = 0;
-        
-        int lo = 0, hi = n - 1;
+        bool deleted = 0;
         while (lo < hi) {
             if (s[lo] == s[hi]) {
-                lo++;    hi--;
+                lo++;
+                hi--;
             } else {
-                if (del != 0)    return false;
-                else {
-                    if (varify(s, lo + 1, hi) || varify(s, lo, hi - 1))    return true;
-                    else    return false;
-                }
+                return validate(s, lo + 1, hi) || validate(s, lo, hi - 1);
             }
         }
         
-        return true;
+        return 1;
     }
     
 private:
-    bool varify(string s, int lo, int hi) {
+    bool validate(string s, int lo, int hi) {
         while (lo < hi) {
-            if (s[lo] != s[hi])    return false;
-            lo++;    hi--;
+            if (s[lo++] != s[hi--])    return 0;
         }
-        return true;
+        return 1;
     }
 };
