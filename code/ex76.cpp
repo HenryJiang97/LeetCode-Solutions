@@ -24,7 +24,7 @@ public:
             while (inWindow.size() == cnt.size() || hi - lo + 1 > res.length()) {
                 if (inWindow.size() == cnt.size() && hi - lo + 1 < res.length())
                     res = s.substr(lo, hi - lo + 1);
-                if (cnt.find(s[lo]) != cnt.end()) {
+                if (cnt.find(s[lo]) != cnt.end()) { 
                     if (--cntWindow[s[lo]] < cnt[s[lo]])
                         inWindow.erase(s[lo]);
                 }

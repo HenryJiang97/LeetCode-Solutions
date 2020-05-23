@@ -4,42 +4,38 @@
  *     int val;
  *     TreeNode *left;
  *     TreeNode *right;
- *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
  * };
  */
 class BSTIterator {
-public:
-    TreeNode* node;
     stack<TreeNode*> stk;
-    
+public:
     BSTIterator(TreeNode* root) {
-        node = root;
-        while (node != NULL) {
-            stk.push(node);
-            node = node->left;
-        }        
+        add(root);
     }
     
     /** @return the next smallest number */
     int next() {
-        TreeNode* cur = stk.top();    stk.pop();
-        int ret = cur->val;
-        
-        if (cur->right != NULL) {
-            stk.push(cur->right);
-            cur = cur->right->left;
-            while (cur != NULL) {
-                stk.push(cur);
-                cur = cur->left;
-            }
-        }       
-        
+        TreeNode* out = stk.top();    stk.pop();
+        int ret = out->val;
+        if (out->right != NULL)    add(out->right);
         return ret;
     }
     
     /** @return whether we have a next smallest number */
     bool hasNext() {
         return !stk.empty();
+    }
+    
+private:
+    void add(TreeNode* root) {
+        TreeNode* p = root;
+        while (p != NULL) {
+            stk.push(p);
+            p = p->left;
+        }
     }
 };
 
