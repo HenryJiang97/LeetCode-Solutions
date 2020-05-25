@@ -3,18 +3,16 @@ public:
     int trap(vector<int>& height) {
         int n = height.size();
         
-        vector<int> suffix(n);    // The maximum height at or after i
+        vector<int> suffix(n);
         for (int i = n - 1; i >= 0; i--)
-            suffix[i] = i == n - 1 ? height[i] : max(suffix[i + 1], height[i]);
+            suffix[i] = i == n - 1 ? 0 : max(suffix[i + 1], height[i + 1]);
         
-        // Maintain a monotone stack from the left to right
-        stack<int> stk;
-        int sum = 0;
+        int res = 0, MAX = 0;
         for (int i = 0; i < n; i++) {
-            if (stk.empty() || stk.top() < height[i])    stk.push(height[i]);
-            sum += max(0, min(stk.top(), suffix[i]) - height[i]);
+            res += max(0, min(MAX, suffix[i]) - height[i]);
+            MAX = max(MAX, height[i]);
         }
         
-        return sum;
+        return res;
     }
 };
