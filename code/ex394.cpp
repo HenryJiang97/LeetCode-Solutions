@@ -1,39 +1,36 @@
 class Solution {
-    int n, c;
-    
 public:
     string decodeString(string s) {
-        n = s.length();
-        c = 0;
-        return recurrsion(s);
+        queue<char> que;
+        for (char c : s)
+            que.push(c);
+        return decode(que);
     }
     
 private:
-    string recurrsion(string s) {
-        string res = "";
-        
-        while (c < n) {            
-            if (isdigit(s[c])) {
-                int coe = 0;
-                while (isdigit(s[c])) {
-                    coe = coe * 10 + s[c] - '0';
-                    c++;
-                }
-                if (s[c] == '[') {
-                    c++;
-                    string ret = recurrsion(s);
-                    for (int i = 0; i < coe; i++)    res += ret;
-                }
-            } 
-            else if (s[c] == ']') {
-                c++;
-                return res;
-            }
-            else {
-                res += s[c++];
+    string decode(queue<char>& que) {
+        string s = "";
+        int num = 0;
+        while (!que.empty()) {
+            char c = que.front();    que.pop();
+            if (isdigit(c)) {
+                num = num * 10 + (c - '0');
+            } else if (c == '[') {
+                s += buildString(num, decode(que));
+                num = 0;
+            } else if (c == ']') {
+                return s;
+            } else {
+                s += c;
             }
         }
-        
+        return s;
+    }
+    
+    string buildString(int n, string s) {
+        string res = "";
+        for (int i = 0; i < n; i++)
+            res += s;
         return res;
     }
 };
