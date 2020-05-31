@@ -1,66 +1,64 @@
 class Solution {
-    int s;
-    map<string, int> count;
-    
+    int i = 0;
 public:
     string countOfAtoms(string formula) {
-        s = formula.length() - 1;
-        recurrsion(formula, 1);
+        map<string, int> cnt = helper(formula);
         
         // Get result
         string res = "";
-        for (auto entry : count)
-            res += entry.first + (entry.second == 1 ? "" : to_string(entry.second));
-        
+        for (auto& [k, v] : cnt)
+            res += k + (v > 1 ? to_string(v) : "");
         return res;
     }
     
 private:
-    void recurrsion(string formula, int multiple) {
-        while (s >= 0) {
-            if (isdigit(formula[s])) {
-                // Get count of elements
-                int num = 0, step = 1;
-                while (isdigit(formula[s])) {
-                    num += step * (formula[s] - '0');
-                    step *= 10;    s--;
+    map<string, int> helper(string formula) {    // Get the count of atoms
+        map<string, int> cnt;
+        string atom = "";
+        while (i < formula.length()) {
+            char c = formula[i];
+            if (c == '(') {
+                i++;
+                map<string, int> inBracket = helper(formula);
+                add(cnt, inBracket, formula);
+            } else if (c == ')') {
+                i++;
+                return cnt;
+            } else if (isdigit(c)) {
+                int amount = 0;
+                while (i < formula.length() && isdigit(formula[i])) {
+                    amount = amount * 10 + (formula[i] - '0');
+                    i++;
                 }
-                
-                if (formula[s] == ')') {
-                    s--;
-                    recurrsion(formula, multiple * num);
-                }  
-                else {    // Atom with more than one element in current layer
-                    string str = buildString(formula);
-                    if (count.find(str) != count.end())    count[str] += multiple * num;
-                    else    count[str] = multiple * num;
-                    s--;
+                cnt[atom] += amount;
+                atom = "";
+            } else {
+                atom += c;
+                i++;
+                while (i < formula.length() && formula[i] >= 'a' && formula[i] <= 'z') {
+                    atom += formula[i];
+                    i++;
                 }
-            }
-            
-            else if (isalpha(formula[s])) {    // Atom with only one element in current layer
-                string str = buildString(formula);
-                if (count.find(str) != count.end())    count[str] += multiple;
-                else    count[str] = multiple;
-                s--;
-            }
-            
-            else if (formula[s] == '(') {
-                s--;    return;
+                if (i < formula.length() && !isdigit(formula[i])) {
+                    cnt[atom]++;
+                    atom = "";
+                }
             }
         }
+        if (atom != "")    cnt[atom]++;
+        return cnt;
     }
     
-    // Build atom string
-    string buildString(string formula) {
-        string res = "";
-        if (!islower(formula[s])) {
-            res += formula[s];
-            return res;
-        } else {
-            res = formula[s--] + res;
-            res = formula[s] + res;
-            return res;
+    void add(map<string, int>& cnt, map<string, int>& m, string formula) {
+        // Get atoms amount
+        int amount = 0;
+        while (isdigit(formula[i])) {
+            amount = amount * 10 + (formula[i] - '0');
+            i++;
         }
+        
+        // Add atoms in m to cnt
+        for (auto& [k, v] : m)
+            cnt[k] += v * amount;
     }
 };
