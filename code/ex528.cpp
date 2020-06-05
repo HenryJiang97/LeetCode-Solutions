@@ -1,33 +1,25 @@
 class Solution {
-    vector<int> starting;    // Save the starting sum value of each element(idx)
-    int sum = 0;
+    int n;
+    vector<int> prefix{0};
+    vector<int> w;
+    
 public:
-    Solution(vector<int>& w) {
-        starting.resize(w.size());
-        for (int i = 0; i < w.size(); i++) {
-            sum += w[i];
-            if (i + 1 < w.size())
-                starting[i + 1] = sum;
-        }
+    Solution(vector<int>& W) {
+        this->w = W;    this->n = W.size();
+        for (int i = 0; i < n; i++)
+            prefix.push_back(prefix.back() + W[i]);
     }
     
     int pickIndex() {
-        int random = rand() % sum;
-        
-        // Binary search
-        int lo = 0, hi = starting.size() - 1;
-        while (lo <= hi) {
+        int random = rand() % prefix.back() + 1;
+        // Binary search for the index
+        int lo = 0, hi = prefix.size() - 1;
+        while (lo < hi) {
             int mid = lo + (hi - lo) / 2;
-            if (starting[mid] > random)
-                hi = mid - 1;
-            else
-                if (mid + 1 >= starting.size() || starting[mid + 1] > random)
-                    return mid;
-                else
-                    lo = mid + 1;
+            if (prefix[mid] >= random)    hi = mid;
+            else    lo = mid + 1;
         }
-        
-        return -1;
+        return hi - 1;
     }
 };
 
