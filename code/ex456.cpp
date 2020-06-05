@@ -1,30 +1,23 @@
-// Stack
-#include<stack>
-#include<vector>
-using namespace std;
-
 class Solution {
 public:
     bool find132pattern(vector<int>& nums) {
-        if (nums.size() <= 2)    return false;
+        int n = nums.size();    if (n < 3)    return 0;
         
-        // Get the min number array before position i
-        vector<int> minimum(nums.size());
-        minimum[0] = nums[0];
-        for (int i = 1; i < nums.size(); i++)
-            minimum[i] = min(minimum[i - 1], nums[i]);
-        
-        // Maintain the stack
-        stack<int> stack;
-        for (int i = nums.size() - 1; i >= 1; i--) {
-            if (nums[i] > minimum[i]) {
-                if (stack.empty() || stack.top() > nums[i])    stack.push(nums[i]);
-                while (!stack.empty() && minimum[i] >= stack.top())    stack.pop();
-                if (!stack.empty() && stack.top() > minimum[i] && stack.top() < nums[i])
-                    return true;
-            }
+        vector<int> prefix(n);
+        for (int i = 0; i < n; i++) {
+            prefix[i] = i == 0 ? nums[i] : min(nums[i], prefix[i - 1]);
         }
         
-        return false;
+        stack<int> stk;    // Decreasing
+        stk.push(nums[n - 1]);
+        for (int i = n - 2; i >= 1; i--) {
+            int min_before = prefix[i - 1];
+            while (!stk.empty() && stk.top() <= min_before)
+                stk.pop();
+            if (!stk.empty() && nums[i] > stk.top())    return 1;
+            if (stk.empty() || nums[i] < stk.top())    stk.push(nums[i]);
+        }
+        
+        return 0;
     }
 };
