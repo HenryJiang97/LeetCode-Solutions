@@ -4,16 +4,15 @@ class Solution {
 public:
     vector<int> dailyTemperatures(vector<int>& T) {
         int n = T.size();
+        vector<int> res(n);
         
-        vector<int> res(n, 0);
-        stack<int> stk;    stk.push(0);
-        
-        for (int i = 1; i < n; i++) {
-            while (!stk.empty() && T[i] > T[stk.top()]) {
-                res[stk.top()] = i - stk.top();
+        stack<pair<int, int>> stk;    // {val, temp}
+        for (int i = 0; i < n; i++) {
+            while (!stk.empty() && stk.top().first < T[i]) {
+                res[stk.top().second] = i - stk.top().second;
                 stk.pop();
             }
-            stk.push(i);
+            stk.push({T[i], i});
         }
         
         return res;
