@@ -1,26 +1,20 @@
-// Monotone stack
-
 class Solution {
 public:
     vector<int> nextGreaterElements(vector<int>& nums) {
         int n = nums.size();
-        
         for (int i = 0; i < n; i++)    nums.push_back(nums[i]);
+        n *= 2;
         
-        vector<int> temp(2 * n, -1);
-        stack<int> stk;    stk.push(0);
-        
-        for (int i = 1; i < 2 * n; i++) {
-            while (!stk.empty() && nums[stk.top()] < nums[i]) {
-                temp[stk.top()] = nums[i];
+        stack<int> stk;    // Monotonous decreasing
+        vector<int> res(n);
+        for (int i = n - 1; i >= 0; i--) {
+            while (!stk.empty() && stk.top() <= nums[i])
                 stk.pop();
-            }
-            stk.push(i);
+            res[i] = stk.empty() ? -1 : stk.top();
+            stk.push(nums[i]);
         }
         
-        // Copy the first n elements to the result
-        vector<int> res(temp.begin(), temp.begin() + n);
-        
+        res.resize(n / 2);
         return res;
     }
 };

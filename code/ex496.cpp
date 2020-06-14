@@ -1,26 +1,19 @@
-// Monotone stack
-
 class Solution {
 public:
     vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {
-        unordered_map<int, int> map;
-        for (int n : nums1)    map[n] = -1;
-        
-        stack<int> stk;
-        for (int n : nums2) {
-            while (!stk.empty() && stk.top() < n) {
-                if (map.find(stk.top()) != map.end()) {
-                    map[stk.top()] = n;
-                }
+        unordered_map<int, int> greater;
+        stack<int> stk;    // Monotonously decreasing
+        for (int i = nums2.size() - 1; i >= 0; --i) {
+            while (!stk.empty() && nums2[i] >= stk.top())
                 stk.pop();
-            }
-            stk.push(n);
+            greater[nums2[i]] = stk.empty() ? -1 : stk.top();
+            stk.push(nums2[i]);
         }
         
-        vector<int> res(nums1.size());
-        for (int i = 0; i < nums1.size(); i++) {
-            res[i] = map[nums1[i]];
-        }
+        // Get results
+        vector<int> res;
+        for (int num : nums1)
+            res.push_back(greater[num]);
         
         return res;
     }
