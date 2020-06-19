@@ -8,7 +8,7 @@ public:
         dp[0][0] = 1;
         for (int j = 2; j <= np; j++)
             if (p[j - 1] == '*')
-                dp[0][j] = dp[0][j - 2];
+                dp[0][j] = dp[0][j - 2];    // Match zero of the element before
         
         // Build dp array
         for (int i = 1; i <= ns; i++) {
