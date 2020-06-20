@@ -4,9 +4,7 @@
  *     int val;
  *     TreeNode *left;
  *     TreeNode *right;
- *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
- *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
  * };
  */
 class Solution {
@@ -14,21 +12,21 @@ class Solution {
     
 public:
     int maxPathSum(TreeNode* root) {
-        int ret = dfs(root);
+        int ret = helper(root);
         return MAX;
     }
-    
+
 private:
-    int dfs(TreeNode* root) {
+    int helper(TreeNode* root) {
         if (root == NULL)    return 0;
         
-        int rootVal = root->val;
-        int left = dfs(root->left);
-        int right = dfs(root->right);
+        int val = root->val;
+        int left = helper(root->left);
+        left = left >= 0 ? left : 0;
+        int right = helper(root->right);
+        right = right >= 0 ? right : 0;
         
-        MAX = max(MAX, rootVal);
-        MAX = max(MAX, max(max(left + rootVal, right + rootVal), left + right + rootVal));
-        
-        return max(max(left + rootVal, right + rootVal), rootVal);
+        MAX = max(MAX, val + left + right);
+        return max(left, right) + val;
     }
 };
