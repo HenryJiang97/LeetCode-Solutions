@@ -1,4 +1,4 @@
-// Eulerian path
+// Eulerian path (欧拉环路)
 //         -> D -> E
 // A -> B <-> F   
 
