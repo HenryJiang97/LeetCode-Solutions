@@ -1,38 +1,29 @@
 // DFS
 
 class Solution {
-    int n;
-    
 public:
     bool isBipartite(vector<vector<int>>& graph) {
-        n = graph.size();
+        int n = graph.size();
         
-        // Mark each node with color
-        bool res = true;
-        vector<int> color(n);
+        vector<int> group(n);
         for (int i = 0; i < n; i++) {
-            if (color[i] != 0)    continue;    // Visited
-            color[i] = 1;
-            res &= dfs(graph, color, i, -1);
-            if (!res)    return false;
+            if (group[i] != 0)    continue;    // Visited
+            if (!dfs(graph, group, i, 1))    return 0;
         }
         
-        return res;
+        return 1;
     }
     
-    bool dfs(vector<vector<int>>& graph, vector<int>& color, int start, int sign) {
-        bool res = true;        
-        
-        vector<int>& children = graph[start];
-        for (int i = 0; i < children.size(); i++) {
-            if (color[children[i]] == sign)    continue;    // Visited
-            if (color[children[i]] == -sign)    return false;    // Confliction inspected
-            
-            color[children[i]] = sign;
-            res &= dfs(graph, color, children[i], -sign);
-            if (!res)    return false;
+private:
+    bool dfs(vector<vector<int>>& graph, vector<int>& group, int cur, int color) {
+        for (int nxt : graph[cur]) {
+            if (group[nxt] != 0) {    // Visited
+                if (group[nxt] != color)    return 0;
+            } else {    // Not visited
+                group[nxt] = color;
+                if (!dfs(graph, group, nxt, -color))    return 0;
+            }
         }
-        
-        return res;
+        return 1;
     }
 };
