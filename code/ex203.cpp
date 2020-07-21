@@ -3,38 +3,25 @@
  * struct ListNode {
  *     int val;
  *     ListNode *next;
- *     ListNode(int x) : val(x), next(NULL) {}
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
  * };
  */
 class Solution {
 public:
     ListNode* removeElements(ListNode* head, int val) {
-        if(head == NULL)
-            return head;
+        ListNode* dummyHead = new ListNode(0);
+        dummyHead->next = head;
+        ListNode* p = dummyHead;
         
-        //If head->val == val
-        while(head->val == val){
-            head = head->next;
-            
-            if(head == NULL)
-                break;
-        }
-
-        
-        ListNode* p = head;
-
-        
-        while(p != NULL){
-            //If p points to the last node in the chain list
-            if(p->next == NULL)
-                return head;
-            
-            if(p->next->val == val)
+        while (p != NULL && p->next != NULL) {
+            while (p != NULL && p->next != NULL && p->next->val == val) {
                 p->next = p->next->next;
-            else
-                p = p->next;
+            }
+            p = p->next;
         }
         
-        return head;
+        return dummyHead->next;
     }
 };
