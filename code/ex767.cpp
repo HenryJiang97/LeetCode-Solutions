@@ -1,35 +1,26 @@
-typedef pair<int, char> ic;
-
 class Solution {
 public:
     string reorganizeString(string S) {
-        int n = S.length();
-        vector<int> map(26, 0);
-        for (char c : S)    map[c - 'a']++;
+        unordered_map<char, int> cnt;
+        for (char c : S)    cnt[c]++;
         
-        priority_queue<ic> pq;
-        for (int i = 0; i < 26; i++)
-            if (map[i] > 0)
-                pq.push({map[i], (char)(i + 'a')});
+        priority_queue<pair<int, char>> pq;
+        for (auto& [k, v] : cnt)
+            pq.push({v, k});
         
         string res = "";
         while (!pq.empty()) {
-            vector<ic> temp;
-            while (!pq.empty()) {
-                ic top = pq.top();    pq.pop();
-                int cnt = top.first;    char c = top.second;
-                if (res.length() > 0 && c == res[res.length() - 1]) {
-                    temp.push_back(top);
-                    if (pq.empty())    return "";
-                }
-                else {
-                    res += c;
-                    if (--cnt > 0)    pq.push({cnt, c});
-                    break;
-                }
+            pair<int, char> top = pq.top();    pq.pop();
+            if (res.size() > 0 && res.back() == top.second) {
+                if (pq.empty())    return "";
+                pair<int, char> nxt = pq.top();    pq.pop();
+                res.push_back(nxt.second);
+                if (--nxt.first > 0)    pq.push(nxt);
+                pq.push(top);
+            } else {
+                res.push_back(top.second);
+                if (--top.first > 0)    pq.push(top);
             }
-            for (ic p : temp)
-                pq.push(p);
         }
         
         return res;
