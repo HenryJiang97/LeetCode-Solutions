@@ -3,22 +3,18 @@ public:
     int findTheLongestSubstring(string s) {
         int n = s.length();
         
-        int mask = 0, MAX = 0;
-        unordered_map<int, int> m;
-        m[mask] = -1;
+        vector<char> v{'a', 'e', 'i', 'o', 'u'};
+        unordered_set<int> vowels(v.begin(), v.end());
+        unordered_map<int, int> map;    map[0] = -1;
         
-        for (int z = 0; z < n; ++z) {
-            char c = s[z];
-            if (c == 'a')    mask ^= (1 << 0);
-            else if (c == 'e')    mask ^= (1 << 1);
-            else if (c == 'i')    mask ^= (1 << 2);
-            else if (c == 'o')    mask ^= (1 << 3);
-            else if (c == 'u')    mask ^= (1 << 4);
-            
-            if (m.count(mask) != 0)
-                MAX = max(MAX, z - m[mask]);
-            else
-                m[mask] = z;
+        int MAX = 0, mask = 0;
+        for (int i = 0; i < n; i++) {
+            if (vowels.count(s[i]) > 0)
+                mask = mask ^ (1 << (s[i] - 'a'));
+            if (map.count(mask) > 0)
+                MAX = max(MAX, i - map[mask]);
+            if (map.count(mask) == 0)
+                map[mask] = i;
         }
         
         return MAX;
