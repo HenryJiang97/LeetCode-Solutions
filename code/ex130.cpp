@@ -6,36 +6,29 @@ public:
     void solve(vector<vector<char>>& board) {
         m = board.size();    if (m == 0)    return;
         n = board[0].size();    if (n == 0)    return;
-        
-        vector<vector<bool>> visited(m, vector<bool>(n));
         for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                if (i != 0 && j != 0 && i != m - 1 && j != n - 1)
-                    continue;
-                if (visited[i][j] || board[i][j] == 'X')    continue;
-                visited[i][j] = 1;
-                board[i][j] = 'K';
-                dfs(board, visited, i, j);
-            }
+            if (board[i][0] == 'O')    dfs(board, i, 0);
+            if (board[i][n - 1] == 'O')    dfs(board, i, n - 1);
         }
-        
+        for (int j = 0; j < n; j++) {
+            if (board[0][j] == 'O')    dfs(board, 0, j);
+            if (board[m - 1][j] == 'O')    dfs(board, m - 1, j);
+        }
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                if (board[i][j] == 'K')    board[i][j] = 'O';
-                else if (board[i][j] == 'O')    board[i][j] = 'X';
+                if (board[i][j] == 'O')    board[i][j] = 'X';
+                if (board[i][j] == '!')    board[i][j] = 'O';
             }
         }
     }
     
 private:
-    void dfs(vector<vector<char>>& board, vector<vector<bool>>& visited, int i, int j) {
-        for (auto d : dir) {
+    void dfs(vector<vector<char>>& board, int i, int j) {
+        if (i < 0 || j < 0 || i >= m || j >= n || board[i][j] != 'O')    return;
+        board[i][j] = '!';
+        for (auto& d : dir) {
             int ni = i + d[0], nj = j + d[1];
-            if (ni < 0 || nj < 0 || ni >= m || nj >= n || visited[ni][nj] || board[ni][nj] == 'X')
-                continue;
-            visited[ni][nj] = 1;
-            board[ni][nj] = 'K';
-            dfs(board, visited, ni, nj);
+            dfs(board, ni, nj);
         }
     }
 };
