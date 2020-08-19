@@ -4,35 +4,34 @@
 // if (S[i] == 'I')    dp[i][j] = dp[i - 1][0, 1, 2, ... , j - 1];
 
 class Solution {
+    const int mod = 1e9 + 7;
+    int dp[202][202];
 public:
     int numPermsDISequence(string S) {
         int n = S.length();
-        int mod = 1e9 + 7;
+        memset(dp, 0, sizeof(dp));
         
-        vector<vector<int>> dp(n + 1, vector<int>(n + 1));
         dp[0][0] = 1;
-            
-        for (int i = 1; i < n + 1; i++) {
+        for (int i = 1; i <= n; i++) {
             for (int j = 0; j <= i; j++) {
                 if (S[i - 1] == 'D') {
-                    for (int k = j; k < i; k++) {
-                        dp[i][j] += dp[i - 1][k];
-                        dp[i][j] %= mod;
+                    for (int jj = j; jj < i; jj++) {
+                        dp[i][j] = (dp[i][j] + dp[i - 1][jj]) % mod;
                     }
                 } else {
-                    for (int k = 0; k < j; k++) {
-                        dp[i][j] += dp[i - 1][k];
-                        dp[i][j] %= mod;
+                    for (int jj = 0; jj < j; jj++) {
+                        dp[i][j] = (dp[i][j] + dp[i - 1][jj]) % mod;
                     }
                 }
             }
         }
         
+        // Get result
         int res = 0;
-        for (auto& a : dp[n]) {
-            res += a;
-            res %= mod;
+        for (int j = 0; j <= n; j++) {
+            res = (res + dp[n][j]) % mod;
         }
+        
         return res;
     }
 };
