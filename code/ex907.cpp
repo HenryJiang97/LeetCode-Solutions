@@ -1,43 +1,39 @@
-// sum = A[0 : n - 1] * ((left + 1) * (right + 1))
+// sum = A[i] * (1 + left_span + right_span + (left_span * right_span))
 // Maintaining monotone ascending stack
 
 class Solution {
-    int mod = 1e9 + 7;
 public:
     int sumSubarrayMins(vector<int>& A) {
-        int n = A.size();
+        const int mod = 1e9 + 7, n = A.size();
         
-        stack<pair<int, int>> sleft, sright;    // {value, count} pair
-        vector<int> vleft(n), vright(n);
+        stack<int> stk;
+        vector<int> left(n), right(n);
         
-        // Calculate from the left
-        for (int i = 0; i < n; i++)
-        {
-            int cnt = 1;
-            while (!sleft.empty() && sleft.top().first > A[i])
-            {
-                cnt += sleft.top().second;    sleft.pop();
+        // Get left span
+        for (int i = 0; i < n; i++) {
+            while (!stk.empty() && A[stk.top()] >= A[i]) {
+                stk.pop();
             }
-            sleft.push({A[i], cnt});
-            vleft[i] = cnt;
+            left[i] = stk.empty() ? i : i - stk.top() - 1;
+            stk.push(i);
         }
         
-        // Calculate from the right
-        for (int i = n - 1; i >= 0; --i)
-        {
-            int cnt = 1;
-            while (!sright.empty() && sright.top().first >= A[i])
-            {
-                cnt += sright.top().second;    sright.pop();
+        // Get right span
+        stk = stack<int>();
+        for (int i = n - 1; i >= 0; i--) {
+            while (!stk.empty() && A[stk.top()] > A[i]) {
+                stk.pop();
             }
-            sright.push({A[i], cnt});
-            vright[i] = cnt;
+            right[i] = stk.empty() ? n - i - 1 : stk.top() - i - 1;
+            stk.push(i);
         }
         
-        // Get the result
+        // Get sum
         int sum = 0;
-        for (int i = 0; i < n; i++)
-            sum = (sum + A[i] * vleft[i] * vright[i]) % mod;
+        for (int i = 0; i < n; i++) {
+            sum += (1 + left[i] + right[i] + left[i] * right[i]) * A[i];
+            sum %= mod;
+        }
         
         return sum;
     }
