@@ -2,21 +2,17 @@ class Solution {
 public:
     vector<string> generateParenthesis(int n) {
         vector<string> res;
-        backtracking(n, n, res, "");
+        dfs(res, n, 0, "");
         return res;
     }
     
 private:
-    void backtracking(int l, int r, vector<string>& res, string s) {
-        if (l == 0 && r == 0) {
-            res.push_back(s);
+    void dfs(vector<string>& res, int open, int close, string cur) {
+        if (open == 0 && close == 0) {
+            res.push_back(cur);
             return;
         }
-        if (l < 0 || r < 0 || l > r)    return;
-        
-        // Pick left bracket
-        backtracking(l - 1, r, res, s + "(");
-        // Pick right bracket
-        backtracking(l, r - 1, res, s + ")");
+        if (open > 0)    dfs(res, open - 1, close + 1, cur + '(');
+        if (close > 0)    dfs(res, open, close - 1, cur + ')');
     }
 };
