@@ -1,37 +1,21 @@
 class Solution {
 public:
     int evalRPN(vector<string>& tokens) {
-        int n = tokens.size();
-        
+        vector<string> signs{"+", "-", "*", "/"};
+        unordered_set<string> set(signs.begin(), signs.end());
         stack<int> stk;
-        for (int i = 0; i < n; i++) {
-            string s = tokens[i];
-            
-            if (s == "+") {
-                int n1 = stk.top();    stk.pop();
-                int n2 = stk.top();    stk.pop();
-                stk.push(n1 + n2);
-            } 
-            else if (s == "-") {
-                int n1 = stk.top();    stk.pop();
-                int n2 = stk.top();    stk.pop();
-                stk.push(n2 - n1);
-            }
-            else if (s == "*") {
-                int n1 = stk.top();    stk.pop();
-                int n2 = stk.top();    stk.pop();
-                stk.push(n1 * n2);
-            }
-            else if (s == "/") {
-                int n1 = stk.top();    stk.pop();
-                int n2 = stk.top();    stk.pop();
-                stk.push(n2 / n1);
-            }
-            else {
+        for (string s : tokens) {            
+            if (set.count(s) > 0) {
+                int p2 = stk.top();    stk.pop();
+                int p1 = stk.top();    stk.pop();
+                if (s == "*")    stk.push(p1 * p2);
+                if (s == "/")    stk.push(p1 / p2);
+                if (s == "+")    stk.push(p1 + p2);
+                if (s == "-")    stk.push(p1 - p2);
+            } else {
                 stk.push(stoi(s));
             }
         }
-        
         return stk.top();
     }
 };
