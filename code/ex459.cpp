@@ -1,22 +1,19 @@
 class Solution {
 public:
     bool repeatedSubstringPattern(string s) {
-        int n = s.size();
-        for (int partition = 2; partition <= n; partition++) {
-            if (n % partition != 0)    continue;
-            bool sign = true;
-            int interval = n / partition;
-            for (int i = 0; i < interval; i++) {
-                for (int j = i + interval; j < n; j += interval) {
-                    if (s[i] != s[j]) {
-                        sign = false;
-                        break;
-                    }
-                }
-                if (!sign)    break;
-            }
-            if (sign)    return true;
+        int n = s.length();
+        for (int i = 1; i <= n / 2; i++) {
+            if (n % i != 0)    continue;
+            if (validate(s, i))    return 1;
         }
-        return false;
+        return 0;
+    }
+    
+private:
+    bool validate(string s, int l) {
+        string substring = s.substr(0, l);
+        for (int i = l; i < s.length(); i += l)
+            if (s.substr(i, l) != substring)    return 0;
+        return 1;
     }
 };
