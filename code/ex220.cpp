@@ -2,32 +2,21 @@ class Solution {
 public:
     bool containsNearbyAlmostDuplicate(vector<int>& nums, int k, int t) {
         int n = nums.size();
-        map<long, long> map;
+        if (k < 1)    return 0;
+        
+        map<long, int> map;
         for (int i = 0; i < n; i++) {
-            long val = nums[i], lower = LONG_MIN / 2, higher = LONG_MAX / 2;
-            
-            // Lower
-            if (!map.empty() && (*map.begin()).first <= val) {
-                auto lit = --map.upper_bound(val);
-                lower = (*lit).first;
-            }
-            
-            // Higher
-            if (!map.empty() && (*map.rbegin()).first >= val) {
-                auto hit = map.lower_bound(val);
-                higher = (*hit).first;
-            }
-            
-            if (val - lower <= t || higher - val <= t) {
-                cout<<lower<<" "<<val<<" "<<higher;
-                return 1;
-            }
-            
-            map[nums[i]]++;
-            if (i - k >= 0) {
-                if (--map[nums[i - k]] == 0)
-                    map.erase(nums[i - k]);
-            }
+            long lower = LONG_MIN / 2, higher = LONG_MAX / 2, cur = nums[i];
+            auto upperBound = map.upper_bound(cur);
+            auto lowerBound = map.lower_bound(cur);
+            if (upperBound != map.begin())
+                lower = (*(--upperBound)).first;
+            if (lowerBound != map.end())
+                higher = (*lowerBound).first;
+            if (cur - lower <= t || higher - cur <= t)    return 1;
+            map[cur]++;
+            if (i - k >= 0)
+                if (--map[nums[i - k]] == 0)    map.erase(nums[i - k]);
         }
         
         return 0;
