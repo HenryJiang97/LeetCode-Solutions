@@ -1,28 +1,23 @@
 class Solution {
-    vector<vector<int>> res;
 public:
     vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
-        sort(candidates.begin(), candidates.end());
+        vector<vector<int>> res;
         vector<int> cur;
-        for (int i = 0; i < candidates.size(); i++) {
-            cur.push_back(candidates[i]);
-            dfs(candidates, cur, target, i, candidates[i]);
-            cur.pop_back();
-        }
+        dfs(candidates, res, cur, target, 0);
         return res;
     }
     
 private:
-    void dfs(vector<int>& candidates, vector<int>& cur, int target, int s, int sum) {
-        if (sum == target) {
-            res.push_back(cur);
+    void dfs(vector<int>& candidates, vector<vector<int>>& res, vector<int>& cur, int target, int s) {
+        if (target <= 0) {
+            if (target == 0)    res.push_back(cur);
             return;
         }
-        if (sum > target || s >= candidates.size())    return;
         
         for (int i = s; i < candidates.size(); i++) {
+            if (i > s && candidates[i] == candidates[i - 1])    continue;
             cur.push_back(candidates[i]);
-            dfs(candidates, cur, target, i, sum + candidates[i]);
+            dfs(candidates, res, cur, target - candidates[i], i);
             cur.pop_back();
         }
     }
