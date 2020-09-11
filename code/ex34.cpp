@@ -1,42 +1,29 @@
 class Solution {
 public:
     vector<int> searchRange(vector<int>& nums, int target) {
-        int n = nums.size();
+        int n = nums.size(), start = -1, end = -1;
+        if (n == 0)    return {-1, -1};
         
-        vector<int> res;
-        
-        // Find the first index
-        int lo = 0, hi = n - 1, t = -1;
-        while (lo <= hi) {
+        // Find the starting index of target
+        int lo = 0, hi = n - 1;
+        while (lo < hi) {
             int mid = lo + (hi - lo) / 2;
-            if (nums[mid] == target) {
-                if (mid - 1 < 0 || nums[mid - 1] < target) {
-                    t = mid;
-                    break;
-                }
-                hi = mid - 1;
-            }
-            else if (nums[mid] > target)    hi = mid - 1;
+            if (nums[mid] >= target)    hi = mid;
             else    lo = mid + 1;
         }
-        res.push_back(t);
+        if (nums[hi] != target)    return {-1, -1};
+        start = hi;
         
-        // Find the second index
-        lo = 0; hi = n - 1; t = -1;
-        while (lo <= hi) {
-            int mid = lo + (hi - lo) / 2;
-            if (nums[mid] == target) {
-                if (mid + 1 >= n || nums[mid + 1] > target){
-                    t = mid;
-                    break;
-                }
-                lo = mid + 1;
-            }
-            else if (nums[mid] < target)    lo = mid + 1;
+        // Find the ending index of target
+        lo = 0;    hi = n - 1;
+        while (lo < hi) {
+            int mid = lo + (hi - lo + 1) / 2;
+            if (nums[mid] <= target)    lo = mid;
             else    hi = mid - 1;
         }
-        res.push_back(t);
+        if (nums[lo] != target)    return {-1, -1};
+        end = lo;
         
-        return res;
+        return {start, end};
     }
 };
