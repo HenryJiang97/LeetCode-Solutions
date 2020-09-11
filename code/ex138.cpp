@@ -5,32 +5,27 @@ public:
     int val;
     Node* next;
     Node* random;
-
-    Node() {}
-
-    Node(int _val, Node* _next, Node* _random) {
+    
+    Node(int _val) {
         val = _val;
-        next = _next;
-        random = _random;
+        next = NULL;
+        random = NULL;
     }
 };
 */
+
 class Solution {
     unordered_map<Node*, Node*> map;
-    
 public:
     Node* copyRandomList(Node* head) {
         if (head == NULL)    return NULL;
+        if (map.count(head) > 0)    return map[head];
+
+        Node* root = new Node(head->val);
+        map[head] = root;
+        root->next = copyRandomList(head->next);
+        root->random = copyRandomList(head->random);
         
-        // Define new node
-        Node* newNode = new Node();
-        map.insert({head, newNode});
-        
-        // Build new node
-        newNode->val = head->val;
-        newNode->next = map.find(head->next) != map.end() ? map[head->next] : copyRandomList(head->next);
-        newNode->random = map.find(head->random) != map.end() ? map[head->random] : copyRandomList(head->random);
-        
-        return newNode;
+        return root;
     }
 };
