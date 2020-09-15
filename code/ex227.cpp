@@ -3,39 +3,39 @@ public:
     int calculate(string s) {
         s += '+';
         
-        int num = 0, sign = 1;
-        stack<int> stk;
-        char operation = ' ';
+        stack<char> signs;
+        stack<int> nums;
+        int temp = 0, sign = 1;
         for (char c : s) {
-            if (isdigit(c) || c == ' ') {
-                if (isdigit(c))    num = num * 10 + (c - '0');
-            }
-            else {
-                if (operation != ' ') {
-                    int out = stk.top();    stk.pop();
-                    if (operation == '*')    stk.push(out * (sign * num));
-                    else    stk.push(out / (sign * num));
-                    operation = ' ';
+            if (isdigit(c)) {
+                temp = temp * 10 + (c - '0');
+            } else if (c != ' ') {
+                if (!signs.empty()) {
+                    int n1 = nums.top();    nums.pop();
+                    if (signs.top() == '*') {
+                        nums.push(n1 * temp);
+                    } else if (signs.top() == '/') {
+                        nums.push(n1 / temp);
+                    } else {
+                        nums.push(temp * sign);
+                    }
+                    signs.pop();
                 } else {
-                    stk.push(sign * num);    
+                    nums.push(temp * sign);    
                 }
-                num = 0;
-                sign = 1;
+                temp = 0;
                 
-                if (c == '+')    sign = 1;
-                else if (c == '-')    sign = -1;
-                else if (c == '*')    operation = '*';
-                else if (c == '/')    operation = '/';
-            } 
+                if (c == '-')    sign = -1;
+                else if (c == '+')    sign = 1;
+                else    signs.push(c);
+            }
         }
         
-        // Get result
-        int sum = 0;
-        while (!stk.empty()) {
-            sum += stk.top();
-            stk.pop();
+        int res = 0;
+        while (!nums.empty()) {
+            res += nums.top();
+            nums.pop();
         }
-        
-        return sum;
+        return res;
     }
 };
