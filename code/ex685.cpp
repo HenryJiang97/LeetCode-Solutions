@@ -1,5 +1,6 @@
 // 1. One node has two parents
-// 2. Cycle exists in the graph
+// 2. Cycle
+
 
 class Solution {
 public:

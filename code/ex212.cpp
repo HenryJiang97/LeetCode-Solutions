@@ -53,7 +53,7 @@ public:
     }
     
 private:
-    void insert(string s) {
+    void insert(string s) {    // O(len(s))
         TrieNode* p = root;
         for (char c : s) {
             if (p->children[c - 'a'] == NULL)
