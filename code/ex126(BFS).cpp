@@ -1,35 +1,28 @@
 class Solution {
 public:
     vector<vector<string>> findLadders(string beginWord, string endWord, vector<string>& wordList) {
-        vector<vector<string>> res;
         unordered_set<string> dict(wordList.begin(), wordList.end());
-        if (dict.find(endWord) == dict.end())    return {};
+        vector<vector<string>> res;
+        
         queue<vector<string>> que;
         que.push({beginWord});
         
-        bool found = 0;
         while (!que.empty()) {
             int size = que.size();
             unordered_set<string> visited;
             for (int z = size; z > 0; z--) {
                 vector<string> out = que.front();    que.pop();
-                string curr = out.back();
-                vector<string> next = getNext(curr, dict);
-                for (string nxt : next) {
-                    if (nxt == endWord) {
-                        found = 1;
-                        out.push_back(nxt);
-                        res.push_back(out);
-                        out.pop_back();
-                    }
+                if (!res.empty() && res.back().size() < out.size())    break;    // Longer than existing results
+                if (out.back() == endWord)    res.push_back(out);
+                vector<string> nxts = getNextStr(dict, out.back());
+                for (string nxt : nxts) {
                     out.push_back(nxt);
                     que.push(out);
                     out.pop_back();
                     visited.insert(nxt);
                 }
             }
-            if (found)    break;
-            for (auto v : visited)
+            for (string v : visited)
                 dict.erase(v);
         }
         
@@ -37,15 +30,15 @@ public:
     }
     
 private:
-    vector<string> getNext(string str, unordered_set<string>& dict) {
+    vector<string> getNextStr(unordered_set<string>& dict, string cur) {
         vector<string> res;
-        for (int d = 0; d < str.size(); d++) {
-            for (int i = 0; i < 26; i++) {
-                string newStr = str;
-                newStr[d] = (char)('a' + i);
-                if (newStr == str || (dict.find(newStr) == dict.end()))    continue;
-                res.push_back(newStr);
+        for (int i = 0; i < cur.length(); i++) {
+            char d = cur[i];
+            for (char c = 'a'; c <= 'z'; c++) {
+                cur[i] = c;
+                if (c != d && dict.count(cur) > 0)    res.push_back(cur);
             }
+            cur[i] = d;
         }
         return res;
     }
