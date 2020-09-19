@@ -1,42 +1,40 @@
 class Solution {
-    unordered_set<string> set;
-    
 public:
     int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
-        int n = beginWord.length();
-        for (string word : wordList)    set.insert(word);
-        if (!contains(endWord))    return 0;
+        unordered_set<string> dict(wordList.begin(), wordList.end());
         
-        // Run BFS
         queue<string> que;
         que.push(beginWord);
-        int transform = 0;
-        
+        int step = 0;
         while (!que.empty()) {
-            transform++;
-            
-            for (int z = que.size() - 1; z >= 0; z--) {    // Loop current layer of BFS
+            int size = que.size();
+            for (int z = size; z > 0; z--) {
                 string out = que.front();    que.pop();
-                
-                for (int d = 0; d < n; d++) {    // Loop each digit in the current string
-                    for (int c = 0; c < 26; c++) {
-                        if ('a' + c == out[d])    continue;    // Skip the newStr which is the same as old one
-                        string newStr = out;    newStr[d] = 'a' + c;
-                        if (newStr == endWord)    return transform + 1;
-                        if (contains(newStr)) {
-                            que.push(newStr);
-                            set.erase(newStr);
-                        }
-                    }
+                if (out == endWord)    return step + 1;
+                vector<string> nxts = getNexts(dict, out);
+                for (string nxt : nxts) {
+                    que.push(nxt);
+                    dict.erase(nxt);
                 }
             }
+            step++;
         }
         
         return 0;
     }
     
 private:
-    bool contains(string s) {
-        return set.find(s) != set.end();
+    vector<string> getNexts(unordered_set<string>& dict, string cur) {
+        vector<string> res;
+        for (int i = 0; i < cur.length(); i++) {
+            char d = cur[i];
+            for (char c = 'a'; c <= 'z'; c++) {
+                if (c == d)    continue;
+                cur[i] = c;
+                if (dict.count(cur) > 0)    res.push_back(cur);
+            }
+            cur[i] = d;
+        }
+        return res;
     }
 };
