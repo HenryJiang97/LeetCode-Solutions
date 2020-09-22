@@ -10,30 +10,17 @@
 class Solution {
 public:
     TreeNode* mergeTrees(TreeNode* t1, TreeNode* t2) {
-        if (t1 == NULL)    return t2;
-        merge(t1, t2);
-        return t1;
+        return merge(t1, t2);
     }
     
 private:
-    void merge(TreeNode* t1, TreeNode* t2) {
-        if (t2 == NULL)    return;
-        
-        t1->val = t1->val + t2->val;
-        
-        // Go to left child
-        if (t1->left == NULL && t2->left != NULL) {
-            auto newNode = new TreeNode(0);
-            t1->left = newNode;
-        }
-        
-        // Go the right child
-        if (t1->right == NULL && t2->right != NULL) {
-            auto newNode = new TreeNode(0);
-            t1->right = newNode;
-        }
-        
-        merge(t1->left, t2->left);
-        merge(t1->right, t2->right);
+    TreeNode* merge(TreeNode* p1, TreeNode* p2) {
+        if (p1 == NULL && p2 == NULL)    return NULL;
+        int v1 = p1 == NULL ? 0 : p1->val;
+        int v2 = p2 == NULL ? 0 : p2->val;
+        TreeNode* p = new TreeNode(v1 + v2);
+        p->left = merge(p1 == NULL ? NULL : p1->left, p2 == NULL ? NULL : p2->left);
+        p->right = merge(p1 == NULL ? NULL : p1->right, p2 == NULL ? NULL : p2->right);
+        return p;
     }
 };
