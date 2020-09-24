@@ -8,49 +8,35 @@
  * };
  */
 class Solution {
-    int MAX = 1, last = INT_MIN;
+    int MAX = 0;
+    int prev = INT_MIN, cnt = 0;
+    vector<int> modes;
 public:
     vector<int> findMode(TreeNode* root) {
         if (root == NULL)    return {};
-        vector<int> res;
-        int cnt = 1;
-        findmax(root, cnt, res);
-        
-        if (cnt > MAX) {
-            res.clear();
-            res.push_back(last);
-            MAX = cnt;
-        } else if (cnt == MAX) {
-            res.push_back(last);
+        inorder(root);
+        if (cnt >= MAX) {    // Update modes array
+            if (cnt > MAX)    modes.clear();
+            modes.push_back(prev);
         }
-        
-        return res;
+        return modes;
     }
     
 private:
-    void findmax(TreeNode* root, int& cnt, vector<int>& res) {
-        TreeNode* p = root;
-        if (p == NULL)    return;
-        
-        findmax(p->left, cnt, res);
-        
-        // In place maintaining the result array
-        if (p->val == last) {
+    void inorder(TreeNode* root) {
+        if (root == NULL)    return;
+        inorder(root->left);
+        if (root->val == prev) {
             cnt++;
         } else {
-            if (last == INT_MIN)    last = p->val;
-            else {
-                if (cnt > MAX) {
-                    res.clear();
-                    res.push_back(last);
-                    MAX = cnt;
-                } else if (cnt == MAX)
-                    res.push_back(last);
-        
-                cnt = 1;    last = p->val;
+            if (cnt >= MAX) {    // Update modes array
+                if (cnt > MAX)    modes.clear();
+                MAX = cnt;
+                modes.push_back(prev);
             }
+            prev = root->val;
+            cnt = 1;
         }
-        
-        findmax(p->right, cnt, res);
+        inorder(root->right);
     }
 };
