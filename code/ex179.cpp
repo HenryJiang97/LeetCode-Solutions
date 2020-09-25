@@ -1,20 +1,12 @@
 class Solution {
-    struct cmp {
-        bool operator()(string a, string b) {
-            return b + a < a + b;
-        }
-    };
-    
 public:
     string largestNumber(vector<int>& nums) {
-        vector<string> candidates;
-        for (int n : nums)    candidates.push_back(to_string(n));
-        sort(candidates.begin(), candidates.end(), cmp());
+        sort(nums.begin(), nums.end(), [](int a, int b) {return to_string(a) + to_string(b) > to_string(b) + to_string(a);});
         string res = "";
-        for (string can : candidates)    res += can;
-        // Remove extra leading zeros
-        int p = 0;
-        while (p < res.length() - 1 && res[p] == '0')    p++;
-        return res.substr(p);
+        for (int num : nums)    res += to_string(num);
+        // Remove front zeros
+        int i;
+        for (i = 0; i < nums.size() - 1 && res[i] == '0'; i++) {}
+        return res.substr(i);
     }
 };
