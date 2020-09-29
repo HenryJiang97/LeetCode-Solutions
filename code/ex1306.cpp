@@ -1,26 +1,32 @@
 class Solution {
+    bool res = 0;
 public:
     bool canReach(vector<int>& arr, int start) {
         int n = arr.size();
-        
-        queue<int> que;
-        que.push(start);
         vector<bool> visited(n);
-        visited[start] = 1;
-        
-        while (!que.empty()) {
-            int out = que.front();    que.pop();
-            if (arr[out] == 0)    return 1;
-            if (out + arr[out] < n && !visited[out + arr[out]]) {
-                que.push(out + arr[out]);
-                visited[out + arr[out]] = 1;
-            }
-            if (out - arr[out] >= 0 && !visited[out - arr[out]]) {
-                que.push(out - arr[out]);
-                visited[out - arr[out]] = 1;
-            }
+        dfs(arr, visited, start);
+        return res;
+    }
+    
+private:
+    void dfs(vector<int>& arr, vector<bool>& visited, int cur) {
+        if (arr[cur] == 0) {
+            res = 1;
+            return;
         }
         
-        return 0;
+        int nxt = cur - arr[cur];
+        if (nxt >= 0 && !visited[nxt]) {
+            visited[nxt] = 1;
+            dfs(arr, visited, nxt);
+            if (res)    return;
+        }
+        
+        nxt = cur + arr[cur];
+        if (nxt < arr.size() && !visited[nxt]) {
+            visited[nxt] = 1;
+            dfs(arr, visited, nxt);
+            if (res)    return;
+        }
     }
 };

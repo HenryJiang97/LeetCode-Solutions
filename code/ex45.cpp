@@ -1,23 +1,21 @@
 class Solution {
 public:
     int jump(vector<int>& nums) {
-        int n = nums.size();
-        
-        vector<int> end(n);
-        for (int i = 0; i < n; i++)
-            end[i] = min(n - 1, i + nums[i]);
-        
-        int i = 0, cnt = 0;
-        while (i < n - 1) {
-            cnt++;
-            int MAX = i + 1;
-            for (int j = i + 1; j <= end[i] && j < n; j++) {
-                if (end[j] >= end[MAX])
-                    MAX = j;
+        int n = nums.size();    if (n <= 1)    return 0;
+        int jumps = 0, i = 0;
+        while (1) {
+            int nxtJump = nums[i];
+            int nxt = -1, MAX = INT_MIN;
+            for (int j = i + 1; j <= min(i + nxtJump, n - 1); j++) {
+                if (j == n - 1)    return jumps + 1;
+                if (j + nums[j] > MAX) {
+                    MAX = j + nums[j];
+                    nxt = j;
+                }
             }
-            i = MAX;
+            i = nxt;
+            jumps++;
         }
-        
-        return cnt;
+        return -1;
     }
 };
