@@ -12,43 +12,50 @@ public:
 
     // Encodes a tree to a single string.
     string serialize(TreeNode* root) {
-        ostringstream res;
-        serializeHelper(root, res);
-        return res.str();
-    }
-    
-    void serializeHelper(TreeNode* root, ostringstream& s) {
-        if (root == NULL)    s << "# ";
-        else {
-            s << to_string(root->val) << " ";
-            serializeHelper(root->left, s);
-            serializeHelper(root->right, s);
-        }
-    }
-
-    
-    // Decodes your encoded data to tree.
-    TreeNode* deserialize(string data) {
-        istringstream is(data);
-        return deserializeHelper(is);
-    }
-
-    
-    TreeNode* deserializeHelper(istringstream& is) {
         string s = "";
-        is >> s;
-        
-        if (s == "#") {
-            return NULL;
-        } else {
-            TreeNode* root = new TreeNode(stoi(s));
-            root->left = deserializeHelper(is);
-            root->right = deserializeHelper(is);
-            return root;
+        dfs1(root, s);
+        return s;
+    }
+    
+    void dfs1(TreeNode* root, string& s) {
+        if (root == NULL) {
+            s += "# ";
+            return;
         }
-    } 
+        s += to_string(root->val) + " ";
+        dfs1(root->left, s);
+        dfs1(root->right, s);
+    }
+
+    // Decodes your encoded data to tree.
+    int i = 0;
+    
+    TreeNode* deserialize(string data) {
+        return dfs2(data);
+    }
+    
+    TreeNode* dfs2(string data) {
+        string cur = getNext(data);
+        if (cur == "#")    return NULL;
+        TreeNode* root = new TreeNode(stoi(cur));
+        root->left = dfs2(data);
+        root->right = dfs2(data);
+        return root;
+    }
+    
+    string getNext(string s) {
+        string res = "";
+        while (s[i] != ' ') {
+            res += s[i++];
+        }
+        i++;
+        return res;
+    }
 };
 
 // Your Codec object will be instantiated and called as such:
-// Codec codec;
-// codec.deserialize(codec.serialize(root));
+// Codec* ser = new Codec();
+// Codec* deser = new Codec();
+// string tree = ser->serialize(root);
+// TreeNode* ans = deser->deserialize(tree);
+// return ans;
