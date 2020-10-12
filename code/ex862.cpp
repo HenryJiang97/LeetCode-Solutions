@@ -13,7 +13,7 @@ public:
         dque.push_back(0);
         for (int i = 0; i < n; i++) {
             // Remove from tail which prefix before is larger than current prefix
-            while (!dque.empty() && prefix[dque.back()] >= prefix[i + 1])
+            while (!dque.empty() && prefix[dque.back()] > prefix[i + 1])
                 dque.pop_back();
             
             // Remove from head which prefix difference meets the requirement

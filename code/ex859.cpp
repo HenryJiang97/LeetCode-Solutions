@@ -1,32 +1,22 @@
 class Solution {
 public:
     bool buddyStrings(string A, string B) {
-        if (A.length() < 2 || A.length() != B.length())    return false;
+        int na = A.length(), nb = B.length();
+        if (na != nb)    return 0;
         
-        unordered_map<char, int> cnt;
-        int diffchar = 0;
-        vector<int> charidx;
-        for (int i = 0; i < A.length(); i++) {
-            cnt[A[i]]++;
+        int diff = 0, d1 = -1, d2 = -1;
+        bool hasDup = 0;
+        unordered_set<char> visited;
+        for (int i = 0; i < na; i++) {
             if (A[i] != B[i]) {
-                diffchar++;
-                charidx.push_back(i);
-                if (diffchar > 2)    return false;
+                diff++;
+                if (d1 == -1)    d1 = i;
+                else    d2 = i;
             }
+            if (visited.count(A[i]) > 0)    hasDup = 1;
+            visited.insert(A[i]);
         }
         
-        if (diffchar != 0 && diffchar != 2)    return false;
-        
-        if (diffchar == 2) {
-            int idx1 = charidx[0], idx2 = charidx[1];
-            if (A[idx1] == B[idx2] && A[idx2] == B[idx1])    return true;
-            else    return false;
-        } else {
-            int MAX = 0;
-            for (auto entry : cnt) {
-                MAX = max(MAX, entry.second);
-            }
-            return MAX >= 2 ? true : false;
-        }
+        return diff == 2 && A[d1] == B[d2] && A[d2] == B[d1] || diff == 0 && hasDup;
     }
 };
