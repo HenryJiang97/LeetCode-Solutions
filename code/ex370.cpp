@@ -1,20 +1,14 @@
 class Solution {
 public:
     vector<int> getModifiedArray(int length, vector<vector<int>>& updates) {
-        // Get array of changes
-        vector<int> changes(length + 1);
+        vector<int> arr(length);
         for (auto& update : updates) {
-            changes[update[0]] += update[2];
-            changes[update[1] + 1] -= update[2];
+            arr[update[0]] += update[2];
+            if (update[1] + 1 < length)    arr[update[1] + 1] -= update[2];
         }
         
-        // Get results
-        int cur = 0;
-        for (int i = 0; i < length; i++) {
-            cur += changes[i];
-            changes[i] = cur;
-        }
-        changes.resize(length);
-        return changes;
+        for (int i = 1; i < length; i++)
+            arr[i] += arr[i - 1];
+        return arr;
     }
 };
