@@ -1,27 +1,27 @@
 class Solution {
-    public boolean backspaceCompare(String S, String T) {
-        int ns = S.length(), nt = T.length();
-        
-        Stack<Character> stackT = getStack(S);
-        Stack<Character> stackS = getStack(T);
-        
-        while (!stackT.isEmpty() && !stackS.isEmpty()) {
-            if (stackT.pop() != stackS.pop())    return false;
-        }
-        
-        return stackT.isEmpty() && stackS.isEmpty();
-    }
-    
-    private Stack<Character> getStack(String s) {
-        Stack<Character> stack = new Stack();
-        for (char c : s.toCharArray()) {
-            if (c == '#') {
-                if (!stack.isEmpty())    stack.pop();
+public:
+    bool backspaceCompare(string s, string t) {
+        int ps = s.length() - 1, pt = t.length() - 1;
+        int skipS = 0, skipT = 0;
+        while (ps >= 0 || pt >= 0) {
+            while (ps >= 0) {    // Skip deleted chars
+                if (s[ps] == '#') {skipS++;    ps--;}
+                else if (skipS > 0) {ps--;    skipS--;}
+                else    break;
             }
-            else {
-                stack.push(c);
+            while (pt >= 0) {    // Skip deleted chars
+                if (t[pt] == '#') {skipT++;    pt--;}
+                else if (skipT > 0) {pt--;    skipT--;}
+                else    break;
             }
+            if (ps >= 0 && pt >= 0 && s[ps] != t[pt]) {    // Char not match
+                return 0;
+            }
+            if (ps >= 0 != pt >= 0) {    // Only one of the strings is ended
+                return 0;
+            }
+            ps--;    pt--;
         }
-        return stack;
+        return 1;
     }
-}
+};
