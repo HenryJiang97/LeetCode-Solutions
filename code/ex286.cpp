@@ -5,13 +5,11 @@ public:
         const int m = rooms.size();    if (m == 0)    return;
         const int n = rooms[0].size();    if (n == 0)    return;
         
-        vector<vector<bool>> visited(m, vector<bool>(n));
         queue<vector<int>> que;
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 if (rooms[i][j] == 0) {
                     que.push({i, j});
-                    visited[i][j] = 1;
                 }
             }
         }
@@ -24,9 +22,8 @@ public:
                 int i = out[0], j = out[1];
                 for (auto& d : dir) {
                     int ni = i + d[0], nj = j + d[1];
-                    if (ni < 0 || nj < 0 || ni >= m || nj >= n || visited[ni][nj] || rooms[ni][nj] == -1)
+                    if (ni < 0 || nj < 0 || ni >= m || nj >= n || rooms[ni][nj] != INT_MAX)
                         continue;
-                    visited[ni][nj] = 1;
                     rooms[ni][nj] = step;
                     que.push({ni, nj});
                 }
