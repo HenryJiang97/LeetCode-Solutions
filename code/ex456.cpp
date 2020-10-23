@@ -1,23 +1,18 @@
 class Solution {
 public:
     bool find132pattern(vector<int>& nums) {
-        int n = nums.size();    if (n < 3)    return 0;
-        
-        vector<int> prefix(n);
-        for (int i = 0; i < n; i++) {
-            prefix[i] = i == 0 ? nums[i] : min(nums[i], prefix[i - 1]);
-        }
-        
+        int n = nums.size();
+        vector<int> prefixMin{nums[0]};
+        for (int i = 1; i < n; i++)    prefixMin.push_back(min(prefixMin[i - 1], nums[i]));
         stack<int> stk;    // Decreasing
-        stk.push(nums[n - 1]);
-        for (int i = n - 2; i >= 1; i--) {
-            int min_before = prefix[i - 1];
-            while (!stk.empty() && stk.top() <= min_before)
+        for (int i = n - 1; i >= 1; i--) {
+            int pMin = prefixMin[i - 1];
+            while (!stk.empty() && stk.top() <= pMin)
                 stk.pop();
-            if (!stk.empty() && nums[i] > stk.top())    return 1;
-            if (stk.empty() || nums[i] < stk.top())    stk.push(nums[i]);
+            if (!stk.empty() && stk.top() < nums[i])
+                return 1;
+            stk.push(nums[i]);
         }
-        
         return 0;
     }
 };
