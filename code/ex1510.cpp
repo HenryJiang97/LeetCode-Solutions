@@ -7,18 +7,15 @@ public:
     
 private:
     bool backtracking(int n, vector<int>& memo) {
-        if (n == 0)    return 0;
+        if (n <= 0)    return 0;
         if (memo[n] != -1)    return memo[n];
-        
-        bool ret = 0;
+        bool valid = 0;
         for (int i = 1; i * i <= n; i++) {
             if (!backtracking(n - i * i, memo)) {
-                ret = 1;
+                valid = 1;
                 break;
             }
         }
-        
-        memo[n] = ret;
-        return ret;
+        return memo[n] = valid;
     }
 };
