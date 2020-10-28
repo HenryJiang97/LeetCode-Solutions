@@ -1,41 +1,46 @@
 class Solution {
 public:
     int calculate(string s) {
-        s += '+';
+        queue<char> que;
+        for (char c : s)
+            if (c != ' ')    que.push(c);
+        que.push('+');
         
-        stack<char> signs;
-        stack<int> nums;
-        int temp = 0, sign = 1;
-        for (char c : s) {
+        int temp = 0;
+        char sign = '+';
+        stack<int> stk;
+        while (!que.empty()) {
+            char c = que.front();    que.pop();
             if (isdigit(c)) {
                 temp = temp * 10 + (c - '0');
-            } else if (c != ' ') {
-                if (!signs.empty()) {
-                    int n1 = nums.top();    nums.pop();
-                    if (signs.top() == '*') {
-                        nums.push(n1 * temp);
-                    } else if (signs.top() == '/') {
-                        nums.push(n1 / temp);
-                    } else {
-                        nums.push(temp * sign);
-                    }
-                    signs.pop();
-                } else {
-                    nums.push(temp * sign);    
+            } else {
+                switch (sign) {
+                    int out;
+                    case '+':
+                        stk.push(temp);
+                        break;
+                    case '-':
+                        stk.push(-temp);
+                        break;
+                    case '*':
+                        out = stk.top();    stk.pop();
+                        stk.push(out * temp);
+                        break;
+                    case '/':
+                        out = stk.top();    stk.pop();
+                        stk.push(out / temp);
+                        break;
                 }
                 temp = 0;
-                
-                if (c == '-')    sign = -1;
-                else if (c == '+')    sign = 1;
-                else    signs.push(c);
+                sign = c;
             }
         }
         
-        int res = 0;
-        while (!nums.empty()) {
-            res += nums.top();
-            nums.pop();
+        int sum = 0;
+        while (!stk.empty()) {
+            sum += stk.top();
+            stk.pop();
         }
-        return res;
+        return sum;
     }
 };

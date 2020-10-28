@@ -6,8 +6,7 @@ public:
         queue<char> que;
         for (char c : s)
             if (c != ' ')    que.push(c);
-        if (que.empty())    return 0;
-        que.push('e');    // End sign
+        que.push('+');    // End sign
         return cal(que);
     }
     
