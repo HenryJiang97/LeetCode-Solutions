@@ -5,24 +5,24 @@ public:
     bool isBipartite(vector<vector<int>>& graph) {
         int n = graph.size();
         
-        vector<int> group(n);
+        vector<int> color(n);
         for (int i = 0; i < n; i++) {
-            if (group[i] != 0)    continue;    // Visited
-            if (!dfs(graph, group, i, 1))    return 0;
+            if (color[i] != 0)    continue;
+            color[i] = 1;
+            if (!dfs(graph, color, i, color[i]))    return 0;
         }
         
         return 1;
     }
     
 private:
-    bool dfs(vector<vector<int>>& graph, vector<int>& group, int cur, int color) {
-        for (int nxt : graph[cur]) {
-            if (group[nxt] != 0) {    // Visited
-                if (group[nxt] != color)    return 0;
-            } else {    // Not visited
-                group[nxt] = color;
-                if (!dfs(graph, group, nxt, -color))    return 0;
-            }
+    bool dfs(vector<vector<int>>& graph, vector<int>& color, int i, int c) {
+        for (int nxt : graph[i]) {
+            if (color[nxt] == c)    return 0;
+            if (color[nxt] != 0)    continue;
+            color[nxt] = -c;
+            int ret = dfs(graph, color, nxt, -c);
+            if (!ret)    return 0;
         }
         return 1;
     }
