@@ -1,34 +1,43 @@
 class Solution {
-    vector<char> signs{'+', '-', '*', '/'};
 public:
-    bool judgePoint24(vector<int>& numbers) {
-        vector<double> nums;
-        for (int n : numbers)    nums.push_back((double)n);
-        return backtracking(nums);
+    bool judgePoint24(vector<int>& nums) {
+        vector<double> res(nums.begin(), nums.end());
+        return backtracking(res);
     }
     
 private:
-    bool backtracking(vector<double>& nums) {
-        if (nums.empty())    return 0;
-        if (nums.size() == 1)    return abs(nums.back() - 24) < 1e-4;
+    bool backtracking(vector<double>& res) {
+        if (res.size() == 1)    return abs(res[0] - 24.0) < 1e-4;
         
-        for (int i = 0; i < nums.size(); i++) {
-            for (int j = 0; j < nums.size(); j++) {
+        // Pick two cards
+        for (int i = 0; i < res.size(); i++) {
+            for (int j = 0; j < res.size(); j++) {
                 if (i == j)    continue;
-                double n1 = nums[i], n2 = nums[j];
-                
-                vector<double> newNums;
-                for (int k = 0; k < nums.size(); k++) {
-                    if (k != i && k != j)    newNums.push_back(nums[k]);
+                vector<double> newRes;
+                for (int k = 0; k < res.size(); k++) {
+                    if (k != i && k != j)    newRes.push_back(res[k]);
                 }
                 
-                for (char sign : signs) {
-                    if (sign == '+')    newNums.push_back(n1 + n2);
-                    if (sign == '-')    newNums.push_back(n1 - n2);
-                    if (sign == '*')    newNums.push_back(n1 * n2);
-                    if (sign == '/')    newNums.push_back(n1 / n2);
-                    if (backtracking(newNums))    return 1;
-                    newNums.pop_back();
+                // +
+                newRes.push_back(res[i] + res[j]);
+                if (backtracking(newRes))    return 1;
+                newRes.pop_back();
+
+                // -
+                newRes.push_back(res[i] - res[j]);
+                if (backtracking(newRes))    return 1;
+                newRes.pop_back();
+
+                // *
+                newRes.push_back(res[i] * res[j]);
+                if (backtracking(newRes))    return 1;
+                newRes.pop_back();
+                
+                // /
+                if (res[j] != 0) {
+                    newRes.push_back(res[i] / res[j]);
+                    if (backtracking(newRes))    return 1;
+                    newRes.pop_back();
                 }
             }
         }
