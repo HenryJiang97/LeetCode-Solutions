@@ -2,15 +2,13 @@ class Solution {
 public:
     int numTrees(int n) {
         vector<int> dp(n + 1);
-        dp[0] = 1;    dp[1] = 1;
-        
-        for (int i = 2; i <= n; i++) {
-            for (int l = 0; l <= i - 1; l++) {
-                int r = i - 1 - l;
-                dp[i] += dp[l] * dp[r];
+        dp[0] = 1;
+        for (int i = 1; i <= n; i++) {
+            for (int left = 0; left <= i - 1; left++) {
+                int right = i - 1 - left;
+                dp[i] += dp[left] * dp[right];
             }
         }
-        
-        return dp[n];
+        return dp.back();
     }
 };
