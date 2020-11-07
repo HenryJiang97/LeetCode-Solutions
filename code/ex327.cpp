@@ -10,17 +10,14 @@ public:
         
         // Find range sum
         int cnt = 0;
-        map<long, vector<long>> m;
-        m[0].push_back(-1);
-        for (int i = 0; i < n; i++) {
-            auto lowerIt = m.lower_bound(prefix[i] - upper);
-            auto upperIt = m.upper_bound(prefix[i] - lower);
-            if (lowerIt != upperIt) {
-                for (auto p = lowerIt; p != upperIt; p++) {
-                    cnt += (*p).second.size();
-                }
+        map<long, long> map;
+        for (int i = 0; i < prefix.size(); i++) {
+            auto hi = map.upper_bound(prefix[i] - lower);
+            auto lo = map.lower_bound(prefix[i] - upper);
+            for (auto it = lo; it != hi; it++) {
+                cnt += (*it).second;
             }
-            m[prefix[i]].push_back(i);
+            map[prefix[i]]++;
         }
         
         return cnt;
