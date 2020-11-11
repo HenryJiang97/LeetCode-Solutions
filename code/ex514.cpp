@@ -3,29 +3,29 @@ public:
     int findRotateSteps(string ring, string key) {
         int nr = ring.length(), nk = key.length();
         
-        unordered_map<char, vector<int>> m;
-        for (int i = 0; i < nr; i++)
-            m[ring[i]].push_back(i);
+        vector<vector<int>> dict(26);
+        for (int i = 0; i < nr; i++) {
+            dict[ring[i] - 'a'].push_back(i);
+        }
         
         // DP
-        vector<vector<int>> dp(nk + 1, vector<int>(nr, INT_MAX / 2));
-        dp[0][0] = 0;
-        char prev = ring[0];
-        for (int i = 1; i <= nk; i++) {
-            char cur = key[i - 1];
-            for (int curj : m[cur]) {
-                for (int prevj : m[prev]) {
-                    dp[i][curj] = min(dp[i][curj], dp[i - 1][prevj] + min(abs(curj - prevj), nr - abs(curj - prevj)) + 1);
+        vector<vector<int>> dp(nk, vector<int>(nr, INT_MAX / 2));
+        for (int i = 0; i < nk; i++) {
+            for (int cur : dict[key[i] - 'a']) {
+                if (i == 0)    dp[i][cur] = min(dp[i][cur], min(cur, nr - cur) + 1);
+                else {
+                    for (int prev : dict[key[i - 1] - 'a']) {
+                        dp[i][cur] = min(dp[i][cur], dp[i - 1][prev] + min(abs(cur - prev), nr - abs(cur - prev)) + 1);
+                    }
                 }
             }
-            prev = cur;
         }
         
         // Get result
-        int res = INT_MAX;
-        for (int j = 0; j < nr; j++)
-            res = min(res, dp[nk][j]);
-        
+        int res = INT_MAX / 2;
+        for (int j = 0; j < nr; j++) {
+            res = min(res, dp[nk - 1][j]);
+        }
         return res;
     }
 };
