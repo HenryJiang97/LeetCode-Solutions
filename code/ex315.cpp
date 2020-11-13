@@ -1,28 +1,30 @@
-// Binary indexed tree
-
 struct FenwickTree {
-    vector<int> arr;
-    
+    vector<int> prefix;
     FenwickTree(int n) {
-        arr.resize(n + 1);
+        prefix.resize(n + 1);
     }
     
-    void update(int idx, int delta) {
-        idx++;
-        while (idx < arr.size()) {
-            arr[idx] += delta;
-            idx += (idx & (-idx));
+    void add(int i) {
+        i++;
+        while (i < prefix.size()) {
+            prefix[i]++;
+            i += lowbit(i);
         }
     }
     
-    int query(int idx) {
+    int query(int i) {
+        i++;
         int sum = 0;
-        idx++;
-        while (idx > 0) {
-            sum += arr[idx];
-            idx -= (idx & (-idx));
+        while (i > 0) {
+            sum += prefix[i];
+            i -= lowbit(i);
         }
         return sum;
+    }
+    
+private:
+    int lowbit(int x) {
+        return x & (-x);
     }
 };
 
@@ -30,14 +32,12 @@ class Solution {
 public:
     vector<int> countSmaller(vector<int>& nums) {
         int n = nums.size();
-        FenwickTree* ft = new FenwickTree(2 * (int)(1e4));
-        
+        FenwickTree* ft = new FenwickTree(20001);
         vector<int> res(n);
         for (int i = n - 1; i >= 0; i--) {
-            res[i] = ft->query(nums[i] + (int)(1e4));
-            ft->update(nums[i] + (int)(1e4) + 1, 1);
+            res[i] = ft->query(nums[i] + 10000 - 1);
+            ft->add(nums[i] + 10000);
         }
-        
         return res;
     }
 };
