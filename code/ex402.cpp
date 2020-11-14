@@ -4,33 +4,33 @@ public:
         int n = num.length();
         
         stack<char> stk;
-        int i = 0;
-        for ( ; i < n; i++) {
-            while (!stk.empty() && stk.top() > num[i]) {
+        for (char c : num) {
+            while (!stk.empty() && stk.top() > c && k > 0) {
                 stk.pop();
-                if (--k == 0)    break;
+                k--;
             }
-            if (k == 0)    break;
-            if (stk.empty() && num[i] == '0')    continue;
-            stk.push(num[i]);
+            stk.push(c);
         }
         
-        // Remove extra chars
+        // Remove rest of the k chars from the end
         while (k > 0) {
-            if (!stk.empty())    stk.pop();
-            else    i++;
+            stk.pop();
             k--;
         }
-            
-        // Build new string
+        
+        // Get result
         string res = "";
         while (!stk.empty()) {
             res = stk.top() + res;
             stk.pop();
         }
-        while (i < n && res == "" && num[i] == '0')    i++;    // Remove redundant prefix zeros
-        if (i < n)    res += num.substr(i);    // Add rest of the string
         
-        return res == "" ? "0" : res;
+        // Remove leading zeros
+        int start = 0;
+        while (start < res.length() && res[start] == '0')    start++;
+        
+        // Get final answer
+        string ret = res.substr(start);
+        return ret == "" ? "0" : ret;
     }
 };
