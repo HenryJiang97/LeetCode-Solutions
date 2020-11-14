@@ -19,21 +19,18 @@ public:
 class Solution {
 public:
     Node* connect(Node* root) {
-        if (root == NULL)    return root;
-        
+        if (root == NULL)    return NULL;
         queue<Node*> que;
         que.push(root);
-        
         while (!que.empty()) {
             int size = que.size();
-            for (int z = size; z > 0; z--) {
+            while (size--) {
                 Node* out = que.front();    que.pop();
-                if (z > 1)    out->next = que.front();
+                if (size > 0)    out->next = que.front();
                 if (out->left != NULL)    que.push(out->left);
                 if (out->right != NULL)    que.push(out->right);
             }
         }
-        
         return root;
     }
 };
