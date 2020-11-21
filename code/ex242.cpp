@@ -1,14 +1,12 @@
 class Solution {
 public:
     bool isAnagram(string s, string t) {
-        unordered_map<char, int> cnt;
-        for (char c : s)    cnt[c]++;
-        for (char c : t) {
-            if (cnt.find(c) == cnt.end())    return 0;
-            cnt[c]--;
+        vector<int> cnts(26), cntt(26);
+        for (char c : s)    cnts[c - 'a']++;
+        for (char c : t)    cntt[c - 'a']++;
+        for (int i = 0; i < 26; i++) {
+            if (cnts[i] != cntt[i])    return 0;
         }
-        for (auto entry : cnt)
-            if (entry.second != 0)    return 0;
         return 1;
     }
 };
