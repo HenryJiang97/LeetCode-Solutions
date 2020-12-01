@@ -4,7 +4,6 @@ public:
         double lo = (double)INT_MIN, hi = (double)INT_MAX;
         while (hi - lo > 0.00001) {
             double mid = lo + (hi - lo) / 2;
-            cout<<mid<<endl;
             if (check(nums, k, mid))    lo = mid;
             else    hi = mid;
         }
