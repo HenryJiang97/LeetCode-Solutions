@@ -1,0 +1,24 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../Languages/C++"
+		},
+		{
+			"path": "../Languages/JAVA"
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			"**/.classpath": true,
+			"**/.project": true,
+			"**/.settings": true,
+			"**/.factorypath": true
+		},
+		"files.associations": {
+			"iterator": "cpp"
+		}
+	}
+}
