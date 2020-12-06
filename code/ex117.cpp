@@ -25,12 +25,11 @@ public:
         que.push(root);
         while (!que.empty()) {
             int size = que.size();
-            for (int z = size; z > 0; z--) {
-                Node* cur = que.front();    que.pop();
-                Node* nxt = z == 1 ? NULL : que.front();
-                cur->next = nxt;
-                if (cur->left != NULL)    que.push(cur->left);
-                if (cur->right != NULL)    que.push(cur->right);
+            while (size--) {
+                Node* out = que.front();    que.pop();
+                if (size >= 1)    out->next = que.front();
+                if (out->left != NULL)    que.push(out->left);
+                if (out->right != NULL)    que.push(out->right);
             }
         }
         
