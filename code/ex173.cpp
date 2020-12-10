@@ -13,29 +13,22 @@ class BSTIterator {
     stack<TreeNode*> stk;
 public:
     BSTIterator(TreeNode* root) {
-        add(root);
+        addLeft(root);
     }
     
-    /** @return the next smallest number */
     int next() {
         TreeNode* out = stk.top();    stk.pop();
-        int ret = out->val;
-        if (out->right != NULL)    add(out->right);
-        return ret;
+        if (out->right != NULL)    addLeft(out->right);
+        return out->val;
     }
     
-    /** @return whether we have a next smallest number */
     bool hasNext() {
         return !stk.empty();
     }
     
 private:
-    void add(TreeNode* root) {
-        TreeNode* p = root;
-        while (p != NULL) {
-            stk.push(p);
-            p = p->left;
-        }
+    void addLeft(TreeNode* root) {
+        for (TreeNode* p = root; p != NULL; p = p->left)    stk.push(p);
     }
 };
 
