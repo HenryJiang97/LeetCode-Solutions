@@ -3,32 +3,37 @@
  * struct ListNode {
  *     int val;
  *     ListNode *next;
- *     ListNode(int x) : val(x), next(NULL) {}
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
  * };
  */
 class Solution {
-    int carry = 1;
 public:
     ListNode* plusOne(ListNode* head) {
-        if (head == NULL)    return NULL;
-        ListNode* nxt = helper(head);
-        if (carry == 0)    return nxt;
-        else {
-            ListNode* curr = new ListNode(carry);
-            curr->next = nxt;
-            return curr;
+        stack<ListNode*> stk;
+        for (ListNode* p = head; p != NULL; p = p->next) {
+            stk.push(p);
         }
-    }
-    
-private:
-    ListNode* helper(ListNode* head) {
-        if (head == NULL)    return NULL;
-        ListNode* nxt = helper(head->next);
-        int c = carry, val = 0;
-        carry = (head->val + c) / 10;
-        val = (head->val + c) % 10;
-        ListNode* curr = new ListNode(val);
-        curr->next = nxt;
-        return curr;
+        
+        int carry = 1;
+        while (!stk.empty()) {
+            stk.top()->val += carry;
+            carry = 0;
+            if (stk.top()->val == 10) {
+                stk.top()->val = 0;
+                carry = 1;
+            } else {
+                break;
+            }
+            stk.pop();
+        }
+        if (carry == 1) {
+            ListNode* newHead = new ListNode(1);
+            newHead->next = head;
+            return newHead;
+        }
+        
+        return head;
     }
 };
