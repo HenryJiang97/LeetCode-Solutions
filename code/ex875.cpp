@@ -3,17 +3,13 @@
 class Solution {
 public:
     int minEatingSpeed(vector<int>& piles, int H) {
-        // Binary search K between (1 : 10 ^ 9) // O(lg(10^9))
-        int lo = 1, hi = 1e9;
+        // Binary search K between 1 and max_element(piles)
+        int lo = 1, hi = *max_element(piles.begin(), piles.end());
         while (lo < hi) {
             int mid = lo + (hi - lo) / 2;
-            
-            if (!ifPossible(piles, H, mid))
-                lo = mid + 1;
-            else
-                hi = mid;
+            if (!ifPossible(piles, H, mid))    lo = mid + 1;
+            else    hi = mid;
         }
-        
         return hi;
     }
     
