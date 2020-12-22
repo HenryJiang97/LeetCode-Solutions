@@ -1,34 +1,33 @@
-#define all(x) (x).begin(), (x).end()
-
 class Solution {
 public:
     vector<vector<int>> palindromePairs(vector<string>& words) {
-        int n = words.size();
         unordered_map<string, int> map;
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < words.size(); i++) {
             string word = words[i];
-            reverse(all(word));
+            reverse(word.begin(), word.end());
             map[word] = i;
         }
         
         vector<vector<int>> res;
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < words.size(); i++) {
             string word = words[i];
-            for (int j = 0; j < word.length(); j++) {
-                string left = word.substr(0, j);
-                string right = word.substr(j);
-                if (map.find(left) != map.end() && isPalindrome(right) && map[left] != i)
+            for (int l = 1; l <= word.length(); l++) {
+                string left = word.substr(0, l);
+                string right = word.substr(l);
+                if (map.count(left) > 0 && isPalindrome(right) && map[left] != i) {
                     res.push_back({i, map[left]});
-                
-                if (map.find(right) != map.end() && isPalindrome(left) && map[right] != i)
+                }
+                if (map.count(right) > 0 && isPalindrome(left) && map[right] != i) {
                     res.push_back({map[right], i});
+                }
             }
         }
         
-        if (map.find("") != map.end()) {
-            for (string word : words) {
-                if (isPalindrome(word) && word != "")
-                    res.push_back({map[""], map[word]});
+        if (map.count("") > 0) {
+            for (int i = 0; i < words.size(); i++) {
+                if (map[""] != i && isPalindrome(words[i])) {
+                    res.push_back({i, map[""]});
+                }
             }
         }
         
