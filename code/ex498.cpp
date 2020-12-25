@@ -1,39 +1,36 @@
 class Solution {
 public:
-    int m = 0, n = 0;
-    
     vector<int> findDiagonalOrder(vector<vector<int>>& matrix) {
+        const int dir[2][2] = {{-1, 1}, {1, -1}};
+        int m = matrix.size();    if (m == 0)    return {};
+        int n = matrix[0].size();    if (n == 0)    return {};
+        
         vector<int> res;
-        m = matrix.size();    if (m == 0)    return res;
-        n = matrix[0].size();    if (n == 0)    return res;
-        goUpRight(matrix, 0, 0, res);
+        int i = 0, j = 0, d = 0;
+        while (1) {
+            res.push_back(matrix[i][j]);
+            if (i == m - 1 && j == n - 1)    break;
+            
+            int ni = i + dir[d][0], nj = j + dir[d][1];
+            if (ni < 0 || nj < 0 || ni >= m || nj >= n) {
+                if (d == 0) {
+                    if (nj >= n) {
+                        ni = i + 1;    nj = j;
+                    } else {
+                        ni = i;    nj = j + 1;
+                    }
+                } else {
+                    if (ni >= m) {
+                        ni = i;    nj = j + 1;
+                    } else {
+                        ni = i + 1;    nj = j;
+                    }
+                }
+                d = 1 - d;
+            }
+            i = ni;    j = nj;
+        }
+        
         return res;
-    }
-    
-private:
-    void goUpRight(vector<vector<int>>& matrix, int i, int j, vector<int>& res) {
-        res.push_back(matrix[i][j]);
-        while (i - 1 >= 0 && j + 1 < n) {
-            i--;    j++;
-            res.push_back(matrix[i][j]);
-        }
-
-        if (j + 1 < n)
-            goDownLeft(matrix, i, j + 1, res);
-        else if (i + 1 < m)
-            goDownLeft(matrix, i + 1, j, res);
-    }
-    
-    void goDownLeft(vector<vector<int>>& matrix, int i, int j, vector<int>& res) {
-        res.push_back(matrix[i][j]);
-        while (i + 1 < m && j - 1 >= 0) {
-            i++;    j--;
-            res.push_back(matrix[i][j]);
-        }
-
-        if (i + 1 < m)
-            goUpRight(matrix, i + 1, j, res);
-        else if (j + 1 < n)
-            goUpRight(matrix, i, j + 1, res);
     }
 };
