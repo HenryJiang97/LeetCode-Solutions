@@ -2,18 +2,21 @@ class Solution {
 public:
     int numDecodings(string s) {
         int n = s.length();
-        
         vector<int> dp(n + 1);
         dp[0] = 1;
         for (int i = 1; i <= n; i++) {
-            // 1 digit code for the ending
-            if (s[i - 1] >= '1' && s[i - 1] <= '9')
-                dp[i] += dp[i - 1];
-            // 2 digits code for the ending
-            if (i - 2 >= 0 && (s[i - 2] == '1' || s[i - 2] == '2' && s[i - 1] <= '6'))
-                dp[i] += dp[i - 2];
+            for (int j = max(0, i - 2); j < i; j++) {
+                string ss = s.substr(j, i - j);
+                if (valid(ss))    dp[i] += dp[j];
+            }
         }
-        
-        return dp[n];
+        return dp.back();
+    }
+    
+private:
+    bool valid(string s) {
+        int n = s.length();
+        if (n == 1)    return s > "0" && s <= "9";
+        else    return s >= "10" && s <= "26";
     }
 };
