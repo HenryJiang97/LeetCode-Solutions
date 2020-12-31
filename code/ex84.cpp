@@ -1,34 +1,18 @@
 class Solution {
 public:
     int largestRectangleArea(vector<int>& heights) {
-        int n = heights.size();
-        
-        stack<pair<int, int>> stk;    // Monotonously increasing {val, idx}
-        int MAX = 0;
+        heights.push_back(INT_MIN);
+        int n = heights.size(), MAX = 0;
+        stack<pair<int, int>> stk;    // Monotonously increasing
         for (int i = 0; i < n; i++) {
-            while (!stk.empty() && stk.top().first > heights[i]) {
-                auto prev = stk.top();    stk.pop();
-                if (stk.size() == 0) {    // The smallest height before i
-                    MAX = max(MAX, prev.first * i);
-                } else {    // Get the width between i and the prev smaller height
-                    auto pprev = stk.top();
-                    MAX = max(MAX, prev.first * (i - pprev.second - 1));
-                }
+            int first = i;    // The first idx where heights[idx] >= heights[i]
+            while (!stk.empty() && heights[i] < stk.top().first) {
+                MAX = max(MAX, stk.top().first * (i - stk.top().second));
+                first = min(first, stk.top().second);
+                stk.pop();
             }
-            stk.push({heights[i], i});
+            stk.push({heights[i], first});
         }
-        
-        // Tackle remaining pairs in the stack
-        while (!stk.empty()) {
-            auto prev = stk.top();    stk.pop();
-            if (stk.size() == 0) {
-                MAX = max(MAX, prev.first * n);
-            } else {
-                auto pprev = stk.top();
-                MAX = max(MAX, prev.first * (n - pprev.second - 1));
-            }
-        }
-        
         return MAX;
     }
 };
