@@ -1,5 +1,6 @@
 class MyStack {
     queue<int> que;
+    
 public:
     /** Initialize your data structure here. */
     MyStack() {
@@ -15,19 +16,18 @@ public:
     int pop() {
         int size = que.size();
         for (int i = 0; i < size - 1; i++) {
-            que.push(que.front());
-            que.pop();
+            int out = que.front();    que.pop();
+            que.push(out);
         }
-        int ret = que.front();
-        que.pop();
+        int ret = que.front();    que.pop();
         return ret;
     }
     
     /** Get the top element. */
     int top() {
-        int t = this->pop();
-        que.push(t);
-        return t;
+        int ret = pop();
+        que.push(ret);
+        return ret;
     }
     
     /** Returns whether the stack is empty. */
