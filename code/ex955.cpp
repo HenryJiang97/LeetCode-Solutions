@@ -1,30 +1,24 @@
 class Solution {
 public:
     int minDeletionSize(vector<string>& A) {
-        int n = A.size();
-        
+        int m = A.size(), n = A[0].size();
         int cnt = 0;
-        vector<string> cur(n, "");
-        for (int i = 0; i < A[0].length(); i++) {    // O(w * n)
-            vector<string> temp = cur;
-            for (int j = 0; j < n; j++) {
-                temp[j] += A[j][i];
+        
+        vector<bool> prev(m);    // If the prev string is absolutely smaller than cur till current char
+        for (int j = 0; j < n; j++) {
+            bool valid = 1;
+            for (int i = 1; i < m; i++) {
+                if (!prev[i] && A[i][j] < A[i - 1][j])    valid = 0;
             }
-            if (isSorted(temp)) {
-                cur = temp;
-            } else {
-                cnt++;
+            
+            if (!valid)    cnt++;    // Delete current column
+            else {
+                for (int i = 1; i < m; i++) {
+                    if (A[i][j] > A[i - 1][j])    prev[i] = 1;
+                }
             }
         }
         
         return cnt;
-    }
-    
-private:
-    bool isSorted(vector<string>& arr) {    // O(n)
-        for (int i = 1; i < arr.size(); i++) {
-            if (arr[i - 1] > arr[i])    return 0;
-        }
-        return 1;
     }
 };
