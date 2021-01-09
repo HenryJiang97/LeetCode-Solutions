@@ -2,39 +2,32 @@ class Solution {
 public:
     int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
         unordered_set<string> dict(wordList.begin(), wordList.end());
+        if (dict.count(endWord) == 0)    return 0;
         
         queue<string> que;
         que.push(beginWord);
+        
         int step = 0;
         while (!que.empty()) {
             int size = que.size();
-            for (int z = size; z > 0; z--) {
+            while (size--) {
                 string out = que.front();    que.pop();
                 if (out == endWord)    return step + 1;
-                vector<string> nxts = getNexts(dict, out);
-                for (string nxt : nxts) {
-                    que.push(nxt);
-                    dict.erase(nxt);
+                for (int i = 0; i < out.length(); i++) {
+                    char c = out[i];
+                    for (char nc = 'a'; nc <= 'z'; nc++) {
+                        out[i] = nc;
+                        if (dict.count(out) > 0) {
+                            dict.erase(out);
+                            que.push(out);
+                        }
+                    }
+                    out[i] = c;
                 }
             }
             step++;
         }
         
         return 0;
-    }
-    
-private:
-    vector<string> getNexts(unordered_set<string>& dict, string cur) {
-        vector<string> res;
-        for (int i = 0; i < cur.length(); i++) {
-            char d = cur[i];
-            for (char c = 'a'; c <= 'z'; c++) {
-                if (c == d)    continue;
-                cur[i] = c;
-                if (dict.count(cur) > 0)    res.push_back(cur);
-            }
-            cur[i] = d;
-        }
-        return res;
     }
 };
