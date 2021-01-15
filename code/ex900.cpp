@@ -1,21 +1,24 @@
 class RLEIterator {
-    int p, n;
-    vector<int> arr;
+    vector<int> a;
+    int p = 0;
 public:
     RLEIterator(vector<int>& A) {
-        p = 0;
-        n = A.size();
-        arr = A;
+        a = A;
     }
     
-    int next(int N) {
-        while (p < n && N > arr[p]) {
-            N -= arr[p];
-            p += 2;
+    int next(int n) {
+        while (p < a.size() && n > 0) {
+            if (n <= a[p]) {
+                int ret = a[p + 1];
+                a[p] -= n;
+                if (a[p] == 0)    p += 2;
+                return ret;
+            } else {
+                n -= a[p];
+                p += 2;
+            }
         }
-        if (p >= n)    return -1;
-        arr[p] -= N;
-        return arr[p + 1];
+        return -1;
     }
 };
 
