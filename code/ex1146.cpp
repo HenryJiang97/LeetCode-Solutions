@@ -1,31 +1,31 @@
 class SnapshotArray {
-    int len, time, snapId;
-    vector<map<int,int>> arr;
-    unordered_map<int, int> snap2time;
-    
+    vector<vector<pair<int, int>>> arr;    // Values over each snap for each idx
+    int snp = 0;
 public:
     SnapshotArray(int length) {
-        len = length;
-        for (int i = 0; i < len; i++) {
-            arr.push_back(map<int, int>{{0, 0}});
+        arr = vector<vector<pair<int, int>>>(length);
+        for (int i = 0; i < length; i++) {
+            arr[i].push_back({-1, 0});
         }
-        time = 1;    snapId = 0;
     }
     
     void set(int index, int val) {
-        arr[index][time++] = val;
+        arr[index].push_back({snp, val});
     }
     
     int snap() {
-        snap2time[snapId] = time;
-        return snapId++;
+        return snp++;
     }
     
     int get(int index, int snap_id) {
-        int t = snap2time[snap_id];
-        auto& timeArr = arr[index];
-        auto it = --timeArr.lower_bound(t);
-        return (*it).second;
+        vector<pair<int, int>>& a = arr[index];
+        int lo = 0, hi = a.size() - 1;
+        while (lo < hi) {
+            int mid = lo + (hi - lo + 1) / 2;
+            if (a[mid].first > snap_id)    hi = mid - 1;
+            else    lo = mid;
+        }
+        return a[lo].second;
     }
 };
 
