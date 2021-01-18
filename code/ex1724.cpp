@@ -1,13 +1,11 @@
 class DistanceLimitedPathsExist {
     int n;
-    vector<vector<int>> el;
     vector<vector<pair<int, int>>> snapshot;
     
 public:
     DistanceLimitedPathsExist(int n, vector<vector<int>>& edgeList) {
         this->n = n;
-        el = edgeList;
-        sort(el.begin(), el.end(), [](vector<int>& a, vector<int>& b) {
+        sort(edgeList.begin(), edgeList.end(), [](vector<int>& a, vector<int>& b) {
             return a[2] < b[2];
         });
         
@@ -20,8 +18,8 @@ public:
         // Union find and save snapshots
         vector<int> parent(n);
         iota(parent.begin(), parent.end(), 0);
-        for (int i = 0; i < el.size(); i++) {
-            vector<int>& e = el[i];
+        for (int i = 0; i < edgeList.size(); i++) {
+            vector<int>& e = edgeList[i];
             int a = e[0], b = e[1], dis = e[2];
             uni(parent, a, b, dis);
         }
