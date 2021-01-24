@@ -3,36 +3,31 @@
  * struct ListNode {
  *     int val;
  *     ListNode *next;
- *     ListNode(int x) : val(x), next(NULL) {}
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
  * };
  */
-
-// O(count(nodes) * logn)
-
-struct cmp {
-    bool operator()(ListNode* p1, ListNode* p2) {
-        return p1->val > p2->val;
-    }   
-};
-
 class Solution {
 public:
     ListNode* mergeKLists(vector<ListNode*>& lists) {
-        int n = lists.size();
+        priority_queue<pair<int, ListNode*>, vector<pair<int, ListNode*>>, greater<pair<int, ListNode*>>> pq;
+        for (ListNode* node : lists) {
+            if (node != NULL) {
+                pq.push({node->val, node});
+            }
+        }
         
-        priority_queue<ListNode*, vector<ListNode*>, cmp> pq;
-        for (int i = 0; i < n; i++)    // O(nlogn)
-            if (lists[i] != NULL)    pq.push(lists[i]);
-        
-        ListNode* head = new ListNode(0);
-        head->next = NULL;
+        ListNode* head = new ListNode();
         ListNode* p = head;
-        while (!pq.empty()) {    // O(count(nodes) * logn)
-            ListNode* out = pq.top();    pq.pop();
-            if (out->next != NULL)    pq.push(out->next);
-            out->next = NULL;
-            p->next = out;
+        while (!pq.empty()) {
+            int val = pq.top().first;
+            ListNode* node = pq.top().second;
+            pq.pop();
+            if (node->next != NULL)    pq.push({node->next->val, node->next});
+            p->next = node;
             p = p->next;
+            p->next = NULL;
         }
         
         return head->next;
