@@ -1,45 +1,42 @@
 class Solution {
 public:
     int maxNumEdgesToRemove(int n, vector<vector<int>>& edges) {
-        int cnt = 0, e = 0;
+        int cnt = 0;
         
         vector<int> parent(n + 1);
-        for (int i = 1; i <= n; i++)    parent[i] = i;
+        iota(parent.begin(), parent.end(), 0);
+        int connected = 0;
         for (auto& edge : edges) {
-            int t = edge[0], a = edge[1], b = edge[2];
-            if (t == 3) {
-                int ra = find(parent, a), rb = find(parent, b);
-                if (ra == rb)    cnt++;
-                else {
-                    uni(parent, ra, rb);
-                    e++;
-                }
+            int a = edge[1], b = edge[2], type = edge[0];
+            if (type != 3)    continue;
+            if (find(parent, a) == find(parent, b))    cnt++;
+            else {
+                uni(parent, a, b);
+                connected++;
             }
         }
         
-        int e1 = e, e2 = e;
         vector<int> parent1 = parent;
         vector<int> parent2 = parent;
+        int connected1 = connected, connected2 = connected;
         for (auto& edge : edges) {
-            int t = edge[0], a = edge[1], b = edge[2];
-            if (t == 1) {
-                int ra = find(parent1, a), rb = find(parent1, b);
-                if (ra == rb)    cnt++;
+            int a = edge[1], b = edge[2], type = edge[0];
+            if (type == 1) {
+                if (find(parent1, a) == find(parent1, b))    cnt++;
                 else {
-                    uni(parent1, ra, rb);
-                    e1++;
+                    uni(parent1, a, b);
+                    connected1++;
                 }
-            } else if (t == 2) {
-                int ra = find(parent2, a), rb = find(parent2, b);
-                if (ra == rb)    cnt++;
+            } else if (type == 2) {
+                if (find(parent2, a) == find(parent2, b))    cnt++;
                 else {
-                    uni(parent2, ra, rb);
-                    e2++;
+                    uni(parent2, a, b);
+                    connected2++;
                 }
             }
         }
         
-        return e1 == n - 1 && e2 == n - 1 ? cnt : -1;
+        return connected1 == n - 1 && connected2 == n - 1 ? cnt : -1;
     }
     
 private:
